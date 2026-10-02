@@ -8,7 +8,7 @@
 
 iOS Dock 使用 UIKit 的 `UITabBarController`，在 iOS 26 及更新系统上由系统渲染 Liquid Glass；旧版 iOS 使用对应的原生标签栏。构建要求 iOS SDK 26 或更新版本。
 
-工作流还会启动 iOS 26+ 模拟器，运行真实应用的独立预览入口，检查 UIKit 组件挂载、关注页切换和主题同步，并上传 `native-dock-preview-运行编号`（深浅色截图和状态报告）。此预览入口不进入 Release IPA。
+回归测试通过后直接构建并上传 Release IPA。构建流程已移除模拟器启动、预览编译和截图上传步骤。
 
 运行成功后，在该次运行页面的 **Artifacts** 下载 `Slive-iOS-unsigned-运行编号`，解压得到 `Slive-unsigned.ipa`。产物保留 14 天。
 

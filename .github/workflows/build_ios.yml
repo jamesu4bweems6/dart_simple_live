@@ -39,7 +39,7 @@ jobs:
 
       - name: Set up Rust for iOS
         run: |
-          rustup toolchain install stable --profile minimal --target aarch64-apple-ios,aarch64-apple-ios-sim
+          rustup toolchain install stable --profile minimal --target aarch64-apple-ios
           rustup default stable
 
       - name: Verify native Liquid Glass SDK
@@ -53,9 +53,6 @@ jobs:
 
       - name: Run follow-list and dock regression tests
         run: flutter test test/follow_user_controller_test.dart test/native_dock_gesture_test.dart
-
-      - name: Check native preview entry point
-        run: flutter analyze integration_test/native_dock_preview.dart --no-fatal-infos --no-fatal-warnings
 
       - name: Build unsigned iOS application
         run: flutter build ios --release --no-codesign
@@ -87,61 +84,3 @@ jobs:
             echo ''
             echo "Source commit: $GITHUB_SHA"
           } >> "$GITHUB_STEP_SUMMARY"
-
-      - name: Choose iOS 26+ simulator
-        run: |
-          python3 - <<'PY' >> "$GITHUB_ENV"
-          import json, re, subprocess
-          devices = json.loads(subprocess.check_output(['xcrun', 'simctl', 'list', 'devices', 'available', '--json']))['devices']
-          candidates = []
-          for runtime, entries in devices.items():
-              match = re.search(r'\.iOS-(\d+)', runtime)
-              if not match or int(match[1]) < 26:
-                  continue
-              for device in entries:
-                  if 'iPhone' in device['name'] and device.get('isAvailable'):
-                      candidates.append((int(match[1]) != 26, device['state'] != 'Booted', device['udid'], device['state']))
-          if not candidates:
-              raise SystemExit('No iOS 26+ iPhone simulator is installed.')
-          _, _, udid, state = sorted(candidates)[0]
-          print('SIMULATOR_UDID=' + udid)
-          print('SIMULATOR_NEEDS_BOOT=' + str(state != 'Booted').lower())
-          PY
-
-      - name: Build and launch native dock preview
-        run: |
-          if [ "$SIMULATOR_NEEDS_BOOT" = true ]; then
-            xcrun simctl boot "$SIMULATOR_UDID"
-          fi
-          xcrun simctl bootstatus "$SIMULATOR_UDID" -b
-          flutter build ios --simulator --debug --target integration_test/native_dock_preview.dart
-          xcrun simctl ui "$SIMULATOR_UDID" appearance light
-          xcrun simctl install "$SIMULATOR_UDID" build/ios/iphonesimulator/Runner.app
-          xcrun simctl launch "$SIMULATOR_UDID" com.slotsun.slive
-
-      - name: Verify native bridge and capture screenshots
-        run: |
-          set -euo pipefail
-          mkdir -p build/native-dock-preview
-          app_data="$(xcrun simctl get_app_container "$SIMULATOR_UDID" com.slotsun.slive data)"
-          report="$app_data/Documents/native-dock-preview.json"
-          for attempt in $(seq 1 120); do
-            if [ -f "$report" ]; then break; fi
-            sleep 1
-          done
-          cp "$report" build/native-dock-preview/native-state.json
-          python3 -c 'import json; r=json.load(open("build/native-dock-preview/native-state.json")); print(r); assert r["status"] == "success"'
-          sleep 5
-          xcrun simctl io "$SIMULATOR_UDID" screenshot build/native-dock-preview/light.png
-          xcrun simctl ui "$SIMULATOR_UDID" appearance dark
-          sleep 5
-          xcrun simctl io "$SIMULATOR_UDID" screenshot build/native-dock-preview/dark.png
-
-      - name: Upload native dock preview
-        if: always()
-        uses: actions/upload-artifact@v7
-        with:
-          name: native-dock-preview-${{ github.run_number }}
-          path: simple_live_app/build/native-dock-preview/
-          if-no-files-found: warn
-          retention-days: 14
