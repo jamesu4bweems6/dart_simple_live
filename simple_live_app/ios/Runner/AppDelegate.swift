@@ -12,6 +12,11 @@ import Flutter
 
   func didInitializeImplicitFlutterEngine(_ engineBridge: FlutterImplicitEngineBridge) {
     GeneratedPluginRegistrant.register(with: engineBridge.pluginRegistry)
+    guard let registrar = engineBridge.pluginRegistry.registrar(forPlugin: "NativeLiquidGlassDock") else { return }
+    registrar.register(
+      NativeLiquidGlassDockFactory(registrar: registrar),
+      withId: "simple_live/native_liquid_glass_dock"
+    )
   }
 
 }

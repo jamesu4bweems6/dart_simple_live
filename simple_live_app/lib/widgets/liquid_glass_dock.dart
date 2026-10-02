@@ -1,5 +1,7 @@
 import 'dart:ui' as ui;
+import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/constant.dart';
@@ -24,6 +26,9 @@ class DockContentInset extends InheritedWidget {
 class LiquidGlassDock extends StatelessWidget {
   static const double height = 68;
   static const double verticalMargin = 12;
+  static const double nativeHeight = 88;
+
+  static bool get usesNativeDock => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   final List<HomePageItem> items;
   final int selectedIndex;
@@ -39,6 +44,9 @@ class LiquidGlassDock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (items.isEmpty) return const SizedBox.shrink();
+    if (usesNativeDock) {
+      return _NativeLiquidGlassDock(items: items, selectedIndex: selectedIndex, onSelected: onSelected);
+    }
 
     final theme = Theme.of(context);
     final media = MediaQuery.of(context);
@@ -181,6 +189,84 @@ class LiquidGlassDock extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _NativeLiquidGlassDock extends StatefulWidget {
+  final List<HomePageItem> items;
+  final int selectedIndex;
+  final ValueChanged<int> onSelected;
+
+  const _NativeLiquidGlassDock({required this.items, required this.selectedIndex, required this.onSelected});
+
+  @override
+  State<_NativeLiquidGlassDock> createState() => _NativeLiquidGlassDockState();
+}
+
+class _NativeLiquidGlassDockState extends State<_NativeLiquidGlassDock> {
+  MethodChannel? _channel;
+
+  Map<String, Object> get _configuration => {
+        'items': widget.items.map((item) => {'id': item.index, 'title': item.title}).toList(),
+        'selectedIndex': widget.selectedIndex,
+        'darkMode': Theme.of(context).brightness == Brightness.dark,
+        'tintColor': Theme.of(context).colorScheme.primary.toARGB32(),
+      };
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    unawaited(_configure());
+  }
+
+  @override
+  void didUpdateWidget(covariant _NativeLiquidGlassDock oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    unawaited(_configure());
+  }
+
+  Future<void> _configure() async {
+    final channel = _channel;
+    if (channel == null) return;
+    try {
+      await channel.invokeMethod<void>('configure', _configuration);
+    } on MissingPluginException {
+      if (mounted) rethrow;
+    }
+  }
+
+  void _onCreated(int viewId) {
+    final channel = MethodChannel('simple_live/native_dock/$viewId');
+    _channel = channel;
+    channel.setMethodCallHandler((call) async {
+      if (mounted && call.method == 'onSelected' && call.arguments is int) {
+        final index = call.arguments as int;
+        if (index >= 0 && index < widget.items.length) widget.onSelected(index);
+      }
+    });
+    unawaited(_configure());
+  }
+
+  @override
+  void dispose() {
+    _channel?.setMethodCallHandler(null);
+    _channel = null;
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // UIKit supplies its own floating capsule, margins and home-indicator inset.
+    // Do not clip, tint or blur this platform view in Flutter.
+    return SizedBox(
+      height: LiquidGlassDock.nativeHeight + MediaQuery.of(context).viewPadding.bottom,
+      child: UiKitView(
+        viewType: 'simple_live/native_liquid_glass_dock',
+        creationParams: _configuration,
+        creationParamsCodec: const StandardMessageCodec(),
+        onPlatformViewCreated: _onCreated,
       ),
     );
   }

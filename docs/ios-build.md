@@ -6,6 +6,10 @@
 
 构建会安装项目指定的 Flutter SDK、Rust iOS 编译目标，运行关注列表回归测试，再编译 iOS Release 应用。无需配置 Android 密钥、Firebase Secrets 或 Apple 签名证书。
 
+iOS Dock 使用 UIKit 的 `UITabBarController`，在 iOS 26 及更新系统上由系统渲染 Liquid Glass；旧版 iOS 使用对应的原生标签栏。构建要求 iOS SDK 26 或更新版本。
+
+工作流还会启动 iOS 26+ 模拟器，运行真实应用的独立预览入口，检查 UIKit 组件挂载、关注页切换和主题同步，并上传 `native-dock-preview-运行编号`（深浅色截图和状态报告）。此预览入口不进入 Release IPA。
+
 运行成功后，在该次运行页面的 **Artifacts** 下载 `Slive-iOS-unsigned-运行编号`，解压得到 `Slive-unsigned.ipa`。产物保留 14 天。
 
 此 IPA 未签名，安装到 iPhone 前需要另行签名；它不能直接用于 TestFlight 或 App Store 发布。

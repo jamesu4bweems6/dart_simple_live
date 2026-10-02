@@ -12,16 +12,19 @@ class IndexedPage extends GetView<IndexedController> {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
-        final showDock = orientation == Orientation.portrait;
+        final nativeDock = LiquidGlassDock.usesNativeDock;
+        final showDock = nativeDock || orientation == Orientation.portrait;
         final dockInset = showDock
-            ? LiquidGlassDock.height + LiquidGlassDock.verticalMargin * 2 + MediaQuery.of(context).padding.bottom
+            ? nativeDock
+                ? LiquidGlassDock.nativeHeight + MediaQuery.of(context).viewPadding.bottom
+                : LiquidGlassDock.height + LiquidGlassDock.verticalMargin * 2 + MediaQuery.of(context).padding.bottom
             : 0.0;
         return Scaffold(
           extendBody: showDock,
           body: Row(
             children: [
               Visibility(
-                visible: orientation == Orientation.landscape,
+                visible: !showDock,
                 child: Obx(
                   () => NavigationRail(
                     selectedIndex: controller.index.value,
@@ -44,7 +47,7 @@ class IndexedPage extends GetView<IndexedController> {
                   () => Container(
                     decoration: BoxDecoration(
                       border: Border(
-                        left: orientation == Orientation.landscape
+                        left: !showDock
                             ? BorderSide(
                                 color: Colors.grey.withAlpha(50),
                                 width: 1,
