@@ -304,6 +304,11 @@ private final class NativeIOSControl: NSObject, FlutterPlatformView, UITextField
       field.layer.cornerRadius = 12; field.textContainerInset = UIEdgeInsets(top: 12, left: 8, bottom: 12, right: 8)
       field.isEditable = configuration["readOnly"] as? Bool != true && configuration["enabled"] as? Bool != false
       if field.text != configuration["text"] as? String { field.text = configuration["text"] as? String ?? "" }
+      let placeholder = label ?? UILabel(); label = placeholder
+      placeholder.text = configuration["placeholder"] as? String; placeholder.textColor = .placeholderText
+      placeholder.font = field.font; placeholder.numberOfLines = 0; placeholder.isUserInteractionEnabled = false
+      placeholder.isHidden = !field.text.isEmpty
+      if placeholder.superview == nil { field.addSubview(placeholder) }
       mount(field); focusTextIfNeeded(); return
     }
     let field = textField ?? UITextField()
@@ -320,6 +325,25 @@ private final class NativeIOSControl: NSObject, FlutterPlatformView, UITextField
     else if configuration["url"] as? Bool == true { field.keyboardType = .URL }
     else { field.keyboardType = .default }
     field.autocorrectionType = configuration["autocorrect"] as? Bool == false ? .no : .default
+    if let symbol = configuration["prefixSymbol"] as? String {
+      let image = UIImageView(image: UIImage(systemName: symbol)); image.contentMode = .scaleAspectFit
+      image.tintColor = .secondaryLabel; image.frame = CGRect(x: 12, y: 8, width: 22, height: 24)
+      let accessory = UIView(frame: CGRect(x: 0, y: 0, width: 44, height: 40)); accessory.addSubview(image)
+      field.leftView = accessory; field.leftViewMode = .always
+    }
+    let accessories = configuration["accessories"] as? [[String: Any]] ?? []
+    if !accessories.isEmpty {
+      let stack = UIStackView(); stack.axis = .horizontal
+      for item in accessories {
+        let button = UIButton(type: .system)
+        button.setImage(UIImage(systemName: item["symbol"] as? String ?? "xmark.circle"), for: .normal)
+        button.widthAnchor.constraint(equalToConstant: 40).isActive = true
+        button.addAction(UIAction { [weak self] _ in self?.emit("accessory", item["index"]) }, for: .touchUpInside)
+        stack.addArrangedSubview(button)
+      }
+      stack.frame = CGRect(x: 0, y: 0, width: CGFloat(accessories.count * 40), height: 40)
+      field.rightView = stack; field.rightViewMode = .always
+    } else { field.rightView = nil }
     if control == nil { field.addTarget(self, action: #selector(textChanged(_:)), for: .editingChanged) }
     mount(field)
     focusTextIfNeeded()
@@ -335,7 +359,7 @@ private final class NativeIOSControl: NSObject, FlutterPlatformView, UITextField
     if configuration["readOnly"] as? Bool == true { emit("tap"); return false }
     return true
   }
-  func textViewDidChange(_ textView: UITextView) { emit("changed", textView.text ?? "") }
+  func textViewDidChange(_ textView: UITextView) { label?.isHidden = !textView.text.isEmpty; emit("changed", textView.text ?? "") }
   func textViewDidBeginEditing(_ textView: UITextView) { emit("focus", true) }
   func textViewDidEndEditing(_ textView: UITextView) { emit("focus", false) }
   @objc private func textChanged(_ sender: UITextField) { emit("changed", sender.text ?? "") }
@@ -355,6 +379,9 @@ private final class NativeIOSControl: NSObject, FlutterPlatformView, UITextField
     else if kind == "slider" { control?.frame = bounds.insetBy(dx: 16, dy: 0) }
     else { control?.frame = bounds }
     if kind == "textfield" { focusTextIfNeeded() }
+    if let textView {
+      label?.frame = CGRect(x: 12, y: 12, width: max(0, textView.bounds.width - 24), height: 48)
+    }
   }
 
   deinit { channel.setMethodCallHandler(nil) }
@@ -424,6 +451,7 @@ final class NativeIOSPresentations: NSObject {
         alert.addTextField { input in
           input.text = field["text"] as? String; input.placeholder = field["placeholder"] as? String
           input.isSecureTextEntry = field["secure"] as? Bool ?? false
+          input.isUserInteractionEnabled = field["readOnly"] as? Bool != true
           if field["number"] as? Bool == true { input.keyboardType = .decimalPad }
         }
       }
@@ -464,7 +492,7 @@ final class NativeIOSPresentations: NSObject {
   }
 }
 
-private final class NativeFormSheet: UITableViewController, UIAdaptivePresentationControllerDelegate {
+private final class NativeFormSheet: UITableViewController, UISheetPresentationControllerDelegate, UITextViewDelegate {
   var onEvent: ((String, Any?) -> Void)?
   var onDismiss: (() -> Void)?
   private var rows: [[String: Any]] = []
@@ -476,7 +504,7 @@ private final class NativeFormSheet: UITableViewController, UIAdaptivePresentati
     settings = config; rows = config["rows"] as? [[String: Any]] ?? []
     title = config["title"] as? String
     if isViewLoaded && !(oldRows as NSArray).isEqual(to: rows) &&
-      !(view.findFirstResponder() is UITextField) && !view.hasTrackingControl() { tableView.reloadData() }
+      view.findFirstResponder() == nil && !view.hasTrackingControl() { tableView.reloadData() }
   }
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -516,7 +544,7 @@ private final class NativeFormSheet: UITableViewController, UIAdaptivePresentati
     case "check", "radio":
       cell.accessoryType = (row[kind == "check" ? "value" : "selected"] as? Bool ?? false) ? .checkmark : .none
     case "slider", "textfield":
-      let input: UIControl
+      let input: UIView
       if kind == "slider" {
         let slider = UISlider()
         slider.minimumValue = (row["min"] as? NSNumber)?.floatValue ?? 0; slider.maximumValue = (row["max"] as? NSNumber)?.floatValue ?? 1
@@ -530,10 +558,16 @@ private final class NativeFormSheet: UITableViewController, UIAdaptivePresentati
           self?.onEvent?(key, Double(slider.value))
         }, for: .valueChanged)
         input = slider
+      } else if row["multiline"] as? Bool == true {
+        let field = UITextView(); field.text = row["text"] as? String ?? ""
+        field.font = .preferredFont(forTextStyle: .body); field.delegate = self; field.accessibilityIdentifier = key
+        field.isEditable = row["readOnly"] as? Bool != true && row["enabled"] as? Bool != false
+        input = field
       } else {
         let field = UITextField(); field.borderStyle = .roundedRect
         field.text = row["text"] as? String; field.placeholder = row["title"] as? String
         field.isSecureTextEntry = row["secure"] as? Bool ?? false
+        field.isEnabled = row["enabled"] as? Bool ?? true
         field.addAction(UIAction { [weak self, weak field] _ in self?.onEvent?(key, field?.text ?? "") }, for: .editingChanged)
         input = field
       }
@@ -542,7 +576,8 @@ private final class NativeFormSheet: UITableViewController, UIAdaptivePresentati
       NSLayoutConstraint.activate([input.leadingAnchor.constraint(equalTo: cell.contentView.leadingAnchor, constant: 16),
         input.trailingAnchor.constraint(equalTo: cell.contentView.trailingAnchor, constant: -16),
         input.topAnchor.constraint(equalTo: cell.contentView.topAnchor, constant: 10),
-        input.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10), input.heightAnchor.constraint(greaterThanOrEqualToConstant: 36)])
+        input.bottomAnchor.constraint(equalTo: cell.contentView.bottomAnchor, constant: -10),
+        input.heightAnchor.constraint(greaterThanOrEqualToConstant: row["multiline"] as? Bool == true ? 140 : 36)])
     default:
       if let detail = row["detail"] as? String, !detail.isEmpty {
         let label = UILabel(); label.text = detail; label.font = .preferredFont(forTextStyle: .body)
@@ -559,6 +594,7 @@ private final class NativeFormSheet: UITableViewController, UIAdaptivePresentati
     onEvent?(row["key"] as? String ?? "", value)
   }
   func presentationControllerDidDismiss(_ presentationController: UIPresentationController) { onDismiss?() }
+  func textViewDidChange(_ textView: UITextView) { onEvent?(textView.accessibilityIdentifier ?? "", textView.text ?? "") }
 }
 
 private extension UIView {

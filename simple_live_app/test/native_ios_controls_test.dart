@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
@@ -17,6 +16,7 @@ void main() {
   final views = <int, Map<dynamic, dynamic>>{};
   final channels = <MethodChannel>[];
   final presentations = <MethodCall>[];
+  final gestures = <MethodCall>[];
   const modalChannel = MethodChannel('simple_live/native_presentations');
 
   Future<void> event(int id, String name, dynamic value) async {
@@ -41,9 +41,11 @@ void main() {
 
   setUp(() {
     views.clear();
+    gestures.clear();
     channels.clear();
     presentations.clear();
     messenger.setMockMethodCallHandler(SystemChannels.platform_views, (call) async {
+      if (call.method == 'acceptGesture' || call.method == 'rejectGesture') gestures.add(call);
       if (call.method == 'create') {
         final args = call.arguments as Map;
         expect(args['viewType'], 'simple_live/native_control');
@@ -274,6 +276,35 @@ void main() {
     await modalEvent({'id': config['id'], 'key': rows.last['key']});
     await tester.pumpAndSettle();
     expect(await result, 2);
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('UIKit taps win while vertical drags still scroll the settings list', (tester) async {
+    final scroll = ScrollController();
+    var parentTaps = 0;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: GestureDetector(
+                onTap: () => parentTaps++,
+                child: ListView(controller: scroll, children: [
+                  NativeSwitchListTile(title: const Text('原生开关'), value: false, onChanged: (_) {}),
+                  const SizedBox(height: 1800),
+                ])))));
+    await tester.pump();
+    final id = views.keys.single;
+    final center = tester.getCenter(find.byType(UiKitView));
+    await tester.tapAt(center);
+    await tester.pump();
+    expect(gestures.any((call) => call.method == 'acceptGesture' && (call.arguments as Map)['id'] == id), isTrue);
+    expect(parentTaps, 0);
+    gestures.clear();
+    await tester.dragFrom(center, const Offset(0, -200));
+    await tester.pumpAndSettle();
+    expect(scroll.offset, greaterThan(0));
+    expect(gestures.any((call) => call.method == 'acceptGesture' && (call.arguments as Map)['id'] == id), isFalse);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    scroll.dispose();
     expect(tester.takeException(), isNull);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }

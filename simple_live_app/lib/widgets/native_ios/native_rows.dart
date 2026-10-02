@@ -43,9 +43,9 @@ class NativeSettingsRow extends StatelessWidget {
             ...configuration,
           },
           onEvent: (event, value) {
-            if (event == 'tap')
+            if (event == 'tap') {
               onTap?.call();
-            else if (event == 'changed') onChanged?.call(value);
+            } else if (event == 'changed') onChanged?.call(value);
           }),
     );
   }
@@ -115,7 +115,9 @@ class NativeListTile extends ListTile {
         (leading != null && leading is! Icon) ||
         interactive(trailing) ||
         onLongPress != null ||
-        nativeText(title).isEmpty) return super.build(context);
+        nativeText(title).isEmpty) {
+      return super.build(context);
+    }
     return NativeSettingsRow(
         title: nativeText(title),
         subtitle: nativeText(subtitle),

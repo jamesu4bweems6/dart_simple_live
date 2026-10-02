@@ -66,6 +66,7 @@ class _NativeModalState extends State<NativeModal> {
         final snapshot = NativeModalContent(context)..collect(widget.content);
         for (final action in widget.actions) {
           snapshot.collectAction(action);
+          if (widget.style == 'sheet') snapshot.collect(action);
         }
         _content = snapshot;
         final config = <String, Object?>{
@@ -82,7 +83,8 @@ class _NativeModalState extends State<NativeModal> {
                     'text': field.controller?.text ?? '',
                     'placeholder': field.decoration?.hintText ?? field.decoration?.labelText ?? '',
                     'secure': field.obscureText,
-                    'number': field.keyboardType == TextInputType.number
+                    'number': field.keyboardType == TextInputType.number,
+                    'readOnly': field.readOnly,
                   })
               .toList(),
         };
@@ -222,6 +224,9 @@ class NativeModalContent {
         'text': widget.controller?.text ?? '',
         'title': widget.decoration?.labelText ?? widget.decoration?.hintText ?? '',
         'secure': widget.obscureText,
+        'multiline': widget.maxLines != 1,
+        'readOnly': widget.readOnly,
+        'enabled': widget.enabled ?? true,
         'key': _bind((value) {
           widget.controller?.text = value as String;
           widget.onChanged?.call(value);

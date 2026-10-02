@@ -128,16 +128,9 @@ class _RemoteSyncWebDAVConfigPageState extends State<RemoteSyncWebDAVConfigPage>
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 5, bottom: 15),
-                    child: MaterialButton(
-                      minWidth: double.infinity,
-                      color: Theme.of(context).primaryColor,
-                      focusElevation: 0,
-                      elevation: 0,
-                      highlightElevation: 4,
-                      height: 40,
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8.0)),
-                      ),
+                    child: NativeElevatedButton(
+                      style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(48),
+                        backgroundColor: Theme.of(context).primaryColor),
                       child: const Text(
                         "登录",
                         style: TextStyle(color: Colors.white),

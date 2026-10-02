@@ -94,9 +94,13 @@ class _NativeControlState extends State<NativeControl> {
         onPlatformViewCreated: _created,
         gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
           if (widget.ownsDrag)
-            Factory<OneSequenceGestureRecognizer>(EagerGestureRecognizer.new)
-          else
-            Factory<OneSequenceGestureRecognizer>(TapGestureRecognizer.new),
+            Factory<EagerGestureRecognizer>(EagerGestureRecognizer.new)
+          else ...{
+            Factory<TapGestureRecognizer>(() => TapGestureRecognizer()..onTap = () {}),
+            Factory<LongPressGestureRecognizer>(() => LongPressGestureRecognizer()..onLongPress = () {}),
+            if (widget.kind == 'switch')
+              Factory<HorizontalDragGestureRecognizer>(() => HorizontalDragGestureRecognizer()..onUpdate = (_) {}),
+          },
         },
       );
 }

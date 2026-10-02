@@ -7,9 +7,10 @@ Future<TimeOfDay?> showNativeTimePicker(
     required TimeOfDay initialTime,
     TimePickerEntryMode initialEntryMode = TimePickerEntryMode.dial,
     TransitionBuilder? builder}) async {
-  if (!usesNativeIOS)
+  if (!usesNativeIOS) {
     return showTimePicker(
         context: context, initialTime: initialTime, initialEntryMode: initialEntryMode, builder: builder);
+  }
   final result =
       await const MethodChannel('simple_live/native_presentations').invokeMapMethod<String, dynamic>('pickTime', {
     'id': 0,

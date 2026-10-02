@@ -59,6 +59,10 @@ class _NativeTextFieldState extends State<TextField> {
   @override
   Widget build(BuildContext context) {
     final decoration = widget.decoration;
+    final suffix = decoration?.suffixIcon ?? decoration?.suffix;
+    final accessories = (suffix is Row ? suffix.children : [if (suffix != null) suffix])
+        .where((widget) => widget is IconButton || widget is InkWell)
+        .toList();
     return Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
       if (decoration?.labelText != null) Text(decoration!.labelText!, style: Theme.of(context).textTheme.bodySmall),
       SizedBox(
@@ -79,6 +83,16 @@ class _NativeTextFieldState extends State<TextField> {
                 'autofocus': widget.autofocus,
                 'focus': widget.focusNode?.hasFocus,
                 'autocorrect': widget.autocorrect,
+                'prefixSymbol': nativeSymbol(decoration?.prefixIcon),
+                'accessories': [
+                  for (var index = 0; index < accessories.length; index++)
+                    {
+                      'index': index,
+                      'symbol': nativeSymbol(accessories[index] is InkWell
+                          ? (accessories[index] as InkWell).child
+                          : (accessories[index] as IconButton).icon),
+                    }
+                ],
               },
               onEvent: (event, value) {
                 if (event == 'changed' && value is String) {
@@ -106,11 +120,16 @@ class _NativeTextFieldState extends State<TextField> {
                   }
                 }
                 if (event == 'tap') widget.onTap?.call();
+                if (event == 'accessory' && value is int && value >= 0 && value < accessories.length) {
+                  final accessory = accessories[value];
+                  if (accessory is InkWell) accessory.onTap?.call();
+                  if (accessory is IconButton) accessory.onPressed?.call();
+                }
               })),
       if (decoration?.errorText != null)
         Text(decoration!.errorText!, style: TextStyle(color: Theme.of(context).colorScheme.error)),
       if (decoration?.helperText != null) Text(decoration!.helperText!, style: Theme.of(context).textTheme.bodySmall),
-      if (decoration?.suffix != null) decoration!.suffix!,
+      if (suffix != null && accessories.isEmpty) suffix,
     ]);
   }
 

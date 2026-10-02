@@ -62,8 +62,13 @@ class GlassAlertDialog extends AlertDialog {
       for (final action in actions ?? <Widget>[]) {
         snapshot.collectAction(action);
       }
-      if (snapshot.supported)
-        return NativeModal(style: 'alert', title: title, content: content, actions: actions ?? []);
+      if (snapshot.supported) {
+        return NativeModal(
+            style: snapshot.fields.any((field) => field.maxLines != 1) ? 'sheet' : 'alert',
+            title: title,
+            content: content,
+            actions: actions ?? []);
+      }
     }
     return _withGlass(super.build(context));
   }
