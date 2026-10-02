@@ -51,8 +51,8 @@ jobs:
       - name: Restore Flutter dependencies
         run: flutter pub get
 
-      - name: Run follow-list regression tests
-        run: flutter test test/follow_user_controller_test.dart
+      - name: Run follow-list and dock regression tests
+        run: flutter test test/follow_user_controller_test.dart test/native_dock_gesture_test.dart
 
       - name: Check native preview entry point
         run: flutter analyze integration_test/native_dock_preview.dart --no-fatal-infos --no-fatal-warnings

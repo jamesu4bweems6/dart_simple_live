@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/constant.dart';
@@ -267,6 +268,10 @@ class _NativeLiquidGlassDockState extends State<_NativeLiquidGlassDock> {
         creationParams: _configuration,
         creationParamsCodec: const StandardMessageCodec(),
         onPlatformViewCreated: _onCreated,
+        // UIKit owns taps and the system's drag-to-select glass interaction.
+        gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
+          Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+        },
       ),
     );
   }

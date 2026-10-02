@@ -7,6 +7,15 @@ class FourthButtonTapGestureRecognizer extends BaseTapGestureRecognizer {
   GestureTapDownCallback? onTapDown;
 
   @override
+  bool isPointerAllowed(PointerDownEvent event) {
+    // Reject phone touches before entering the arena, otherwise this global
+    // recognizer steals taps from platform views even though it does nothing.
+    return event.kind == PointerDeviceKind.mouse &&
+        event.buttons == kBackMouseButton &&
+        super.isPointerAllowed(event);
+  }
+
+  @override
   void handleTapDown({required PointerDownEvent down}) {
     final TapDownDetails details = TapDownDetails(
       globalPosition: down.position,
@@ -14,7 +23,7 @@ class FourthButtonTapGestureRecognizer extends BaseTapGestureRecognizer {
       kind: getKindForPointer(down.pointer),
     );
     switch (down.buttons) {
-      case 8:
+      case kBackMouseButton:
         if (onTapDown != null) {
           invokeCallback<void>('onTapDown', () => onTapDown!(details));
         }
