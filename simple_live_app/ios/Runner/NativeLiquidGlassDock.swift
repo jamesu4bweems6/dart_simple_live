@@ -1,6 +1,88 @@
 import Flutter
 import UIKit
 
+/// Shared system material for navigation bars, sheets and player controls.
+/// Kept in this compiled source alongside the native tab bar factory.
+final class NativeLiquidGlassSurfaceFactory: NSObject, FlutterPlatformViewFactory {
+  private let messenger: FlutterBinaryMessenger
+
+  init(messenger: FlutterBinaryMessenger) {
+    self.messenger = messenger
+    super.init()
+  }
+
+  func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+    FlutterStandardMessageCodec.sharedInstance()
+  }
+
+  func create(withFrame frame: CGRect, viewIdentifier viewId: Int64, arguments args: Any?) -> FlutterPlatformView {
+    NativeLiquidGlassSurface(frame: frame, viewId: viewId, arguments: args, messenger: messenger)
+  }
+}
+
+private final class NativeLiquidGlassSurface: NSObject, FlutterPlatformView {
+  private let effectView = UIVisualEffectView()
+  private let channel: FlutterMethodChannel
+  private var highContrast = false
+
+  init(frame: CGRect, viewId: Int64, arguments: Any?, messenger: FlutterBinaryMessenger) {
+    channel = FlutterMethodChannel(name: "simple_live/native_glass/\(viewId)", binaryMessenger: messenger)
+    super.init()
+    effectView.frame = frame
+    effectView.isUserInteractionEnabled = false
+    effectView.isAccessibilityElement = false
+    effectView.layer.cornerCurve = .continuous
+    effectView.clipsToBounds = true
+    configure(arguments)
+    NotificationCenter.default.addObserver(self, selector: #selector(updateMaterial),
+      name: UIAccessibility.reduceTransparencyStatusDidChangeNotification, object: nil)
+    NotificationCenter.default.addObserver(self, selector: #selector(updateMaterial),
+      name: UIAccessibility.darkerSystemColorsStatusDidChangeNotification, object: nil)
+    channel.setMethodCallHandler { [weak self] call, result in
+      guard let self else { result(nil); return }
+      if call.method == "configure" {
+        self.configure(call.arguments)
+        result(nil)
+      } else {
+        result(FlutterMethodNotImplemented)
+      }
+    }
+  }
+
+  func view() -> UIView { effectView }
+
+  private func configure(_ arguments: Any?) {
+    guard let config = arguments as? [String: Any] else { return }
+    effectView.overrideUserInterfaceStyle = (config["dark"] as? Bool ?? false) ? .dark : .light
+    effectView.layer.cornerRadius = CGFloat((config["radius"] as? NSNumber)?.doubleValue ?? 28)
+    highContrast = config["highContrast"] as? Bool ?? false
+    updateMaterial()
+  }
+
+  @objc private func updateMaterial() {
+    if highContrast || UIAccessibility.isReduceTransparencyEnabled || UIAccessibility.isDarkerSystemColorsEnabled {
+      effectView.effect = nil
+      effectView.backgroundColor = .secondarySystemBackground
+      return
+    }
+    effectView.backgroundColor = .clear
+    // Availability protects older devices; the compiler guard also permits
+    // development using an older Xcode SDK without UIGlassEffect symbols.
+    #if compiler(>=6.2)
+    if #available(iOS 26.0, *) {
+      effectView.effect = UIGlassEffect(style: .regular)
+      return
+    }
+    #endif
+    effectView.effect = UIBlurEffect(style: .systemMaterial)
+  }
+
+  deinit {
+    NotificationCenter.default.removeObserver(self)
+    channel.setMethodCallHandler(nil)
+  }
+}
+
 final class NativeLiquidGlassDockFactory: NSObject, FlutterPlatformViewFactory {
   private let registrar: FlutterPluginRegistrar
 

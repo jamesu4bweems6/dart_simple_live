@@ -4,16 +4,18 @@ import 'dart:math' as math;
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:material_ui/material_ui.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
-import 'package:intl/intl.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-
-import 'package:material_ui/material_ui.dart';
-import 'package:get/get.dart';
 import 'package:simple_live_app/app/log.dart';
 import 'package:simple_live_app/app/utils/permission_handler.dart';
 import 'package:simple_live_app/requests/common_request.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
+import 'package:simple_live_app/widgets/glass_sheet.dart';
+import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 typedef TextValidate = bool Function(String text);
@@ -56,7 +58,7 @@ class Utils {
     List<Widget>? actions,
   }) async {
     var result = await Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         title: Text(title),
         content: Container(
           constraints: const BoxConstraints(
@@ -92,7 +94,7 @@ class Utils {
   static Future<bool> showMessageDialog(String content,
       {String title = '', String confirm = '', bool selectable = false}) async {
     var result = await Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         title: Text(title),
         content: Padding(
           padding: AppStyle.edgeInsetsV12,
@@ -131,13 +133,8 @@ class Utils {
       useSystem: useSystem,
       maskColor: Colors.transparent,
       animationTime: const Duration(milliseconds: 200),
-      builder: (context) => Material(
-        color: Get.theme.cardColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(4),
-          bottomLeft: Radius.circular(4),
-        ),
-        clipBehavior: Clip.antiAlias,
+      builder: (context) => LiquidGlassSurface(
+        radius: 28,
         child: SizedBox(
           width: width + MediaQuery.of(context).padding.right,
           child: Padding(
@@ -148,7 +145,7 @@ class Utils {
               left: false,
               right: false,
               child: MediaQuery(
-                data: const MediaQueryData(padding: EdgeInsets.zero),
+                data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
                 child: Column(
                   children: [
                     ListTile(
@@ -193,16 +190,10 @@ class Utils {
     required Widget child,
     double maxWidth = 600,
   }) async {
-    var result = await showModalBottomSheet(
+    var result = await showGlassBottomSheet(
       context: Get.context!,
       constraints: BoxConstraints(
         maxWidth: maxWidth,
-      ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
       ),
       builder: (_) => Column(
         children: [
@@ -240,7 +231,7 @@ class Utils {
   }) async {
     final TextEditingController textEditingController = TextEditingController(text: content);
     var result = await Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         title: Text(title),
         content: Padding(
           padding: AppStyle.edgeInsetsT12,
@@ -294,7 +285,7 @@ class Utils {
   }) async {
     final controllers = items.map((item) => TextEditingController(text: item.value)).toList();
     final result = await Get.dialog<Map<String, String>>(
-      AlertDialog(
+      GlassAlertDialog(
         title: Text(title),
         content: SingleChildScrollView(
           child: Column(
@@ -358,7 +349,7 @@ class Utils {
     String title = '',
   }) async {
     var result = await Get.dialog(
-      SimpleDialog(
+      GlassSimpleDialog(
         title: Text(title),
         children: [
           RadioGroup<T>(
@@ -389,7 +380,7 @@ class Utils {
     List<Widget>? actions,
   }) async {
     var result = await Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         title: title ?? const Text("帮助"),
         scrollable: true,
         content: SingleChildScrollView(child: ListBody(children: content)),
@@ -426,7 +417,7 @@ class Utils {
     String title = '',
   }) async {
     var result = await Get.dialog(
-      SimpleDialog(
+      GlassSimpleDialog(
         title: Text(title),
         children: [
           RadioGroup<T>(
@@ -458,7 +449,7 @@ class Utils {
       var versionInfo = await request.checkUpdate();
       if (versionInfo.versionNum > currentVer) {
         Get.dialog(
-          AlertDialog(
+          GlassAlertDialog(
             title: Text(
               "发现新版本 ${versionInfo.version}",
               textAlign: TextAlign.center,

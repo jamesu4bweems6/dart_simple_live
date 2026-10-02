@@ -1,5 +1,5 @@
 import 'package:material_ui/material_ui.dart';
-import 'package:simple_live_app/app/app_style.dart';
+import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 
 class DesktopRefreshButton extends StatelessWidget {
   final bool refreshing;
@@ -8,33 +8,26 @@ class DesktopRefreshButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: AppStyle.radius48,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withAlpha(50),
-            blurRadius: 4,
-          ),
-        ],
-      ),
-      width: 40,
-      height: 40,
-      child: refreshing
-          ? const Center(
-              child: SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
+    return LiquidGlassSurface(
+      radius: 24,
+      child: SizedBox(
+        width: 44,
+        height: 44,
+        child: refreshing
+            ? const Center(
+                child: SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                  ),
                 ),
+              )
+            : IconButton(
+                onPressed: onPressed,
+                icon: const Icon(Icons.refresh),
               ),
-            )
-          : IconButton(
-              onPressed: onPressed,
-              icon: const Icon(Icons.refresh),
-            ),
+      ),
     );
   }
 }

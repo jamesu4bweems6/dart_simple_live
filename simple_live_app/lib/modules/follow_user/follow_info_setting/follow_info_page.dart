@@ -1,9 +1,11 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/modules/follow_user/follow_info_setting/follow_info_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
 import 'package:simple_live_app/widgets/settings/settings_menu.dart';
 
 class FollowInfoPage extends GetView<FollowInfoController> {
@@ -13,7 +15,7 @@ class FollowInfoPage extends GetView<FollowInfoController> {
   Widget build(BuildContext context) {
     final site = Sites.allSites[controller.followUser.value!.siteId]!;
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("关注信息设置"),
         actions: [
           Obx(
@@ -145,7 +147,7 @@ class FollowInfoPage extends GetView<FollowInfoController> {
                 onTap: () {
                   final textController = TextEditingController(text: controller.followUser.value?.remark);
                   Get.dialog(
-                    AlertDialog(
+                    GlassAlertDialog(
                       title: const Text("修改备注"),
                       content: TextField(
                         controller: textController,

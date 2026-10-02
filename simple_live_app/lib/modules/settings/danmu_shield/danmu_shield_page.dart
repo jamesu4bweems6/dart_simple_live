@@ -1,7 +1,8 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/settings/danmu_shield/danmu_shield_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class DanmuShieldPage extends GetView<DanmuShieldController> {
   const DanmuShieldPage({super.key});
@@ -9,7 +10,7 @@ class DanmuShieldPage extends GetView<DanmuShieldController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("弹幕屏蔽"),
       ),
       body: ListView(

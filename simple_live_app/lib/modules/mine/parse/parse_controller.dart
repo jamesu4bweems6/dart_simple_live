@@ -1,10 +1,11 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/app/utils/url_parse.dart';
 import 'package:simple_live_app/routes/app_navigation.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
 
 class ParseController extends GetxController {
   final TextEditingController roomJumpToController = TextEditingController();
@@ -52,7 +53,7 @@ class ParseController extends GetxController {
 
         return;
       }
-      var result = await Get.dialog(SimpleDialog(
+      var result = await Get.dialog(GlassSimpleDialog(
         title: const Text("选择清晰度"),
         children: qualites
             .map(
@@ -74,7 +75,7 @@ class ParseController extends GetxController {
       SmartDialog.showLoading(msg: "");
       var playUrl = await site.liveSite.getPlayUrls(detail: detail, quality: result);
       SmartDialog.dismiss(status: SmartStatus.loading);
-      await Get.dialog(SimpleDialog(
+      await Get.dialog(GlassSimpleDialog(
         title: const Text("选择线路"),
         children: playUrl.urls
             .map(

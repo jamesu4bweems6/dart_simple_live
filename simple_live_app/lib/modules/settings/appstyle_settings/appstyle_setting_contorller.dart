@@ -15,6 +15,7 @@ import 'package:simple_live_app/app/log.dart';
 import 'package:simple_live_app/models/font_model.dart';
 import 'package:simple_live_app/requests/http_client.dart';
 import 'package:simple_live_app/services/local_storage_service.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
 
 class AppStyleSettingController extends GetxController {
   static AppStyleSettingController get instance => Get.find<AppStyleSettingController>();
@@ -195,7 +196,7 @@ class AppStyleSettingController extends GetxController {
 
   void changeTheme() {
     Get.dialog(
-      SimpleDialog(
+      GlassSimpleDialog(
         title: const Text("设置主题"),
         children: [
           RadioGroup<int>(

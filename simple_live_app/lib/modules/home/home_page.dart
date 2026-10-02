@@ -1,9 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/modules/home/home_controller.dart';
 import 'package:simple_live_app/modules/home/home_list_view.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class HomePage extends GetView<HomeController> {
   const HomePage({super.key});
@@ -11,13 +12,13 @@ class HomePage extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         titleSpacing: 8,
         title: TabBar(
           controller: controller.tabController,
           labelPadding: AppStyle.edgeInsetsH20,
           isScrollable: true,
-          indicatorSize: TabBarIndicatorSize.label,
+          indicatorSize: TabBarIndicatorSize.tab,
           tabAlignment: TabAlignment.center,
           tabs: Sites.supportSites
               .map(

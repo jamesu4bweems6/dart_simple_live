@@ -190,11 +190,13 @@ class MyApp extends StatelessWidget {
         () => GetMaterialApp(
           title: "Slive",
           theme: AppStyle.light(
+            colorScheme: lightColorScheme,
             fontFamily: AppStyleSettingController.instance.curFontName.value,
-          ).copyWith(colorScheme: lightColorScheme),
+          ),
           darkTheme: AppStyle.darkTheme(
+            colorScheme: darkColorScheme,
             fontFamily: AppStyleSettingController.instance.curFontName.value,
-          ).copyWith(colorScheme: darkColorScheme),
+          ),
           themeMode: ThemeMode.values[Get.find<AppSettingsController>().themeMode.value],
           initialRoute: RoutePath.kIndex,
           getPages: AppPages.routes,

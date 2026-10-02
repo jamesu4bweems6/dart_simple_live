@@ -39,6 +39,13 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.8.15" date="2026-10-03">
+      <description>
+        <p>feat: 全页面统一 iOS 26 液态玻璃风格，导航栏、弹窗和播放器控制层接入原生系统材质</p>
+        <p>feat: 统一深浅色、分组卡片、输入框与按钮样式，兼容旧版 iOS 和其他平台</p>
+        <p>test: 增加玻璃材质触摸穿透、主题切换、小屏布局及键盘避让回归测试</p>
+      </description>
+    </release>
     <release version="1.8.14" date="2026-09-25">
       <description>
         <p>fix: 进一步修正douyu断流问题</p>

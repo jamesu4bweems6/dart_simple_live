@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:fractional_indexing_dart/fractional_indexing_dart.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pinyin/pinyin.dart';
 import 'package:pool/pool.dart';
@@ -17,14 +17,15 @@ import 'package:simple_live_app/app/event_bus.dart';
 import 'package:simple_live_app/app/log.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/app/utils.dart';
-import 'package:simple_live_app/app/utils/extensions/duration_2_str_utils.dart';
 import 'package:simple_live_app/app/utils/dynamic_sort.dart';
+import 'package:simple_live_app/app/utils/extensions/duration_2_str_utils.dart';
 import 'package:simple_live_app/app/utils/extensions/string_normalizer.dart';
 import 'package:simple_live_app/models/db/follow_snapshot.dart';
 import 'package:simple_live_app/models/db/follow_user.dart';
 import 'package:simple_live_app/models/db/follow_user_tag.dart';
 import 'package:simple_live_app/models/db/history.dart';
 import 'package:simple_live_app/services/db_service.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
 import 'package:simple_live_core/simple_live_core.dart';
 import 'package:synchronized/synchronized.dart';
 
@@ -656,7 +657,7 @@ class FollowService extends GetxService {
     }
     var content = generateJson();
     Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         title: const Text("导出为文本"),
         content: TextField(
           controller: TextEditingController(text: content),
@@ -688,7 +689,7 @@ class FollowService extends GetxService {
   void inputText() async {
     final TextEditingController textController = TextEditingController();
     await Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         title: const Text("从文本导入"),
         content: TextField(
           controller: textController,

@@ -1,9 +1,9 @@
 import 'dart:io';
 
 import 'package:floating/floating.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -16,7 +16,10 @@ import 'package:simple_live_app/services/follow_service.dart';
 import 'package:simple_live_app/widgets/context_menu.dart';
 import 'package:simple_live_app/widgets/desktop_refresh_button.dart';
 import 'package:simple_live_app/widgets/follow_user_item.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
+import 'package:simple_live_app/widgets/glass_sheet.dart';
 import 'package:simple_live_app/widgets/keep_alive_wrapper.dart';
+import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 import 'package:simple_live_app/widgets/net_image.dart';
 import 'package:simple_live_app/widgets/settings/settings_action.dart';
 import 'package:simple_live_app/widgets/settings/settings_card.dart';
@@ -34,7 +37,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
       () {
         if (controller.loadError.value) {
           return Scaffold(
-            appBar: AppBar(
+            appBar: GlassAppBar(
               title: const Text("直播间加载失败"),
             ),
             body: Padding(
@@ -115,7 +118,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
     return OrientationBuilder(
       builder: (context, orientation) {
         return Scaffold(
-          appBar: AppBar(
+          appBar: GlassAppBar(
             title: Obx(
               () => Text(controller.detail.value?.title ?? "直播间"),
             ),
@@ -162,15 +165,8 @@ class LiveRoomPage extends GetView<LiveRoomController> {
             ],
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey.withAlpha(25),
-              ),
-            ),
-          ),
+        LiquidGlassSurface(
+          radius: 24,
           padding: AppStyle.edgeInsetsV4.copyWith(
             bottom: AppStyle.bottomBarHeight + 4,
           ),
@@ -375,15 +371,8 @@ class LiveRoomPage extends GetView<LiveRoomController> {
   }
 
   Widget buildBottomActions(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border(
-          top: BorderSide(
-            color: Colors.grey.withAlpha(25),
-          ),
-        ),
-      ),
+    return LiquidGlassSurface(
+      radius: 24,
       padding: EdgeInsets.only(bottom: AppStyle.bottomBarHeight),
       child: Row(
         children: [
@@ -775,7 +764,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
   }
 
   void showMore() {
-    showModalBottomSheet(
+    showGlassBottomSheet(
       context: Get.context!,
       constraints: const BoxConstraints(
         maxWidth: 600,

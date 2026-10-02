@@ -1,7 +1,7 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:fractional_indexing_dart/fractional_indexing_dart.dart';
 import 'package:get/get.dart' hide Condition;
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/constant.dart';
 import 'package:simple_live_app/app/controller/app_settings_controller.dart';
@@ -9,12 +9,13 @@ import 'package:simple_live_app/app/controller/base_controller.dart';
 import 'package:simple_live_app/app/event_bus.dart';
 import 'package:simple_live_app/app/log.dart';
 import 'package:simple_live_app/app/utils.dart';
-import 'package:simple_live_app/app/utils/extensions/duration_2_str_utils.dart';
 import 'package:simple_live_app/app/utils/dynamic_filter.dart';
+import 'package:simple_live_app/app/utils/extensions/duration_2_str_utils.dart';
 import 'package:simple_live_app/models/db/follow_user.dart';
 import 'package:simple_live_app/models/db/follow_user_tag.dart';
 import 'package:simple_live_app/services/follow_service.dart';
 import 'package:simple_live_app/services/history_service.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
 
 class FollowAppSettingsController extends BaseController {
   final appC = Get.find<AppSettingsController>();
@@ -157,7 +158,7 @@ class FollowAppSettingsController extends BaseController {
     final TextEditingController tagEditController = TextEditingController(text: followUserTag?.tag);
     bool upMode = title == "添加标签" ? true : false;
     Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),

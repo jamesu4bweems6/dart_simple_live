@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/glass_dialog.dart';
+import 'package:simple_live_app/widgets/glass_sheet.dart';
+
 // ignore_for_file: invalid_use_of_protected_member
 
 import 'dart:async';
@@ -190,8 +193,9 @@ class FollowUserController extends BasePageController<FollowUser> {
 
   // 弹出底部菜单栏
   void showBottomMenu(FollowUser item) {
-    Get.bottomSheet(
-      SafeArea(
+    showGlassBottomSheet(
+      context: Get.context!,
+      builder: (_) => SafeArea(
         child: Wrap(
           children: [
             ListTile(
@@ -213,7 +217,6 @@ class FollowUserController extends BasePageController<FollowUser> {
           ],
         ),
       ),
-      backgroundColor: Get.theme.cardColor,
     );
   }
 
@@ -226,7 +229,7 @@ class FollowUserController extends BasePageController<FollowUser> {
     Rx<FollowUserTag> checkTag = tagList.indexOf(filterMode.value) < 3 ? copiedList.first.obs : filterMode.value.obs;
     final ScrollController scrollController = ScrollController();
     Get.dialog(
-      AlertDialog(
+      GlassAlertDialog(
         contentPadding: const EdgeInsets.all(16.0),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12.0),

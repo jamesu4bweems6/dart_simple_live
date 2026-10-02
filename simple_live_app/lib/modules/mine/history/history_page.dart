@@ -1,10 +1,11 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/modules/mine/history/history_controller.dart';
 import 'package:simple_live_app/routes/app_navigation.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/net_image.dart';
 import 'package:simple_live_app/widgets/page_grid_view.dart';
 
@@ -16,7 +17,7 @@ class HistoryPage extends GetView<HistoryController> {
     var rowCount = MediaQuery.of(context).size.width ~/ 500;
     if (rowCount < 1) rowCount = 1;
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("观看记录"),
         actions: [
           TextButton.icon(

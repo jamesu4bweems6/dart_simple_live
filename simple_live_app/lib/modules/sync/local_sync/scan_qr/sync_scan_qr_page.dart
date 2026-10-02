@@ -1,7 +1,8 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
 import 'package:simple_live_app/modules/sync/local_sync/scan_qr/sync_scan_qr_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class SyncScanQRPage extends GetView<SyncScanQRControlelr> {
   const SyncScanQRPage({super.key});
@@ -9,7 +10,7 @@ class SyncScanQRPage extends GetView<SyncScanQRControlelr> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text('扫描二维码'),
         actions: [
           IconButton(

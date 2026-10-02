@@ -1,35 +1,42 @@
+import 'package:flutter/services.dart';
 import 'package:material_ui/material_ui.dart';
-import 'package:simple_live_app/app/app_style.dart';
 
 class FilterButton extends StatelessWidget {
   final bool selected;
   final String text;
-  final Function()? onTap;
-  const FilterButton({
-    this.selected = false,
-    required this.text,
-    this.onTap,
-    super.key,
-  });
+  final VoidCallback? onTap;
+  const FilterButton({this.selected = false, required this.text, this.onTap, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      borderRadius: AppStyle.radius24,
-      onTap: onTap,
-      child: Container(
-        padding: AppStyle.edgeInsetsH12.copyWith(top: 4, bottom: 4),
+    final colors = Theme.of(context).colorScheme;
+    return Semantics(
+      selected: selected,
+      button: true,
+      child: AnimatedContainer(
+        duration: MediaQuery.disableAnimationsOf(context) ? Duration.zero : const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
         decoration: BoxDecoration(
-          border: Border.all(color: selected ? Theme.of(context).textTheme.bodyMedium!.color! : Colors.grey),
-          borderRadius: AppStyle.radius24,
+          color: selected ? colors.primary.withAlpha(28) : colors.onSurface.withAlpha(10),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: selected ? colors.primary.withAlpha(40) : Colors.transparent),
         ),
-        child: Text(
-          text,
-          style: selected
-              ? Theme.of(context).textTheme.bodyMedium
-              : Theme.of(context).textTheme.bodyMedium!.copyWith(
-                    color: Colors.grey,
-                  ),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(24),
+          onTap: onTap == null
+              ? null
+              : () {
+                  HapticFeedback.selectionClick();
+                  onTap!();
+                },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            child: Text(text,
+                style: TextStyle(
+                  color: selected ? colors.primary : colors.onSurfaceVariant,
+                  fontWeight: selected ? FontWeight.w600 : FontWeight.w400,
+                )),
+          ),
         ),
       ),
     );

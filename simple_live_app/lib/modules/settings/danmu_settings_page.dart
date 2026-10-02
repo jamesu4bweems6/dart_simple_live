@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:material_ui/material_ui.dart';
-import 'package:get/get.dart';
 import 'package:canvas_danmaku/canvas_danmaku.dart';
+import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/controller/app_settings_controller.dart';
 import 'package:simple_live_app/routes/route_path.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/settings/settings_action.dart';
 import 'package:simple_live_app/widgets/settings/settings_card.dart';
 import 'package:simple_live_app/widgets/settings/settings_number.dart';
@@ -17,7 +18,7 @@ class DanmuSettingsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("弹幕设置"),
       ),
       body: ListView(

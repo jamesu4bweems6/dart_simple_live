@@ -1,9 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/modules/search/search_controller.dart';
 import 'package:simple_live_app/modules/search/search_list_view.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class SearchPage extends GetView<AppSearchController> {
   const SearchPage({super.key});
@@ -11,7 +12,7 @@ class SearchPage extends GetView<AppSearchController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         automaticallyImplyLeading: false,
         title: TextField(
           controller: controller.searchController,
@@ -84,7 +85,7 @@ class SearchPage extends GetView<AppSearchController> {
               .toList(),
           labelPadding: AppStyle.edgeInsetsH20,
           isScrollable: true,
-          indicatorSize: TabBarIndicatorSize.label,
+          indicatorSize: TabBarIndicatorSize.tab,
         ),
       ),
       body: TabBarView(

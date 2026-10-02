@@ -1,7 +1,8 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/modules/mine/account/bilibili/web_login_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class BiliBiliWebLoginPage extends GetView<BiliBiliWebLoginController> {
   const BiliBiliWebLoginPage({super.key});
@@ -9,7 +10,7 @@ class BiliBiliWebLoginPage extends GetView<BiliBiliWebLoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("哔哩哔哩账号登录"),
         actions: [
           TextButton.icon(

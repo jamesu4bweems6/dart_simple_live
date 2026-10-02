@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/log.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class DebugLogPage extends StatelessWidget {
   const DebugLogPage({super.key});
@@ -13,7 +14,7 @@ class DebugLogPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("Log"),
         actions: [
           IconButton(

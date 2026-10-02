@@ -1,10 +1,11 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/modules/sync/remote_sync/webdav/remote_sync_webdav_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/none_border_circular_textfield.dart';
 
 class RemoteSyncWebDAVConfigPage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _RemoteSyncWebDAVConfigPageState extends State<RemoteSyncWebDAVConfigPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("WebDAV账号配置"),
         centerTitle: true,
         actions: [

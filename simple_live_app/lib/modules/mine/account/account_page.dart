@@ -1,10 +1,11 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/modules/mine/account/account_controller.dart';
 import 'package:simple_live_app/services/bilibili_account_service.dart';
 import 'package:simple_live_app/services/platform_service.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class AccountPage extends GetView<AccountController> {
   const AccountPage({super.key});
@@ -12,7 +13,7 @@ class AccountPage extends GetView<AccountController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("平台配置"),
       ),
       body: ListView(

@@ -1,9 +1,9 @@
-import 'package:material_ui/material_ui.dart';
+import 'indexed_controller.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/widgets/liquid_glass_dock.dart';
-
-import 'indexed_controller.dart';
+import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 
 class IndexedPage extends GetView<IndexedController> {
   const IndexedPage({super.key});
@@ -26,19 +26,24 @@ class IndexedPage extends GetView<IndexedController> {
               Visibility(
                 visible: !showDock,
                 child: Obx(
-                  () => NavigationRail(
-                    selectedIndex: controller.index.value,
-                    onDestinationSelected: controller.setIndex,
-                    labelType: NavigationRailLabelType.none,
-                    destinations: controller.items
-                        .map(
-                          (item) => NavigationRailDestination(
-                            icon: Icon(item.iconData),
-                            label: Text(item.title),
-                            padding: AppStyle.edgeInsetsV8,
-                          ),
-                        )
-                        .toList(),
+                  () => Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: LiquidGlassSurface(
+                      child: NavigationRail(
+                        selectedIndex: controller.index.value,
+                        onDestinationSelected: controller.setIndex,
+                        labelType: NavigationRailLabelType.none,
+                        destinations: controller.items
+                            .map(
+                              (item) => NavigationRailDestination(
+                                icon: Icon(item.iconData),
+                                label: Text(item.title),
+                                padding: AppStyle.edgeInsetsV8,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
                   ),
                 ),
               ),

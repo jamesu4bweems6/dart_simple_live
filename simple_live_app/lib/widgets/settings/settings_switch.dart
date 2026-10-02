@@ -16,7 +16,7 @@ class SettingsSwitch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SwitchListTile(
+    return SwitchListTile.adaptive(
       title: Text(
         title,
         style: Theme.of(context).textTheme.bodyLarge,

@@ -1,8 +1,9 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/sync/local_sync/device/sync_device_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/settings/settings_card.dart';
 
 class SyncDevicePage extends GetView<SyncDeviceController> {
@@ -11,7 +12,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("同步"),
       ),
       body: ListView(

@@ -6,6 +6,12 @@ Format: Each version section starts with `## x.x.x`, followed by change lines st
 
 ---
 
+## 1.8.15
+
+- feat: 全页面统一 iOS 26 液态玻璃风格，导航栏、弹窗和播放器控制层接入原生系统材质
+- feat: 统一深浅色、分组卡片、输入框与按钮样式，兼容旧版 iOS 和其他平台
+- test: 增加玻璃材质触摸穿透、主题切换、小屏布局及键盘避让回归测试
+
 ## 1.8.14
 
 - fix: 进一步修正douyu断流问题

@@ -1,11 +1,12 @@
 import 'dart:io';
 
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/sync/local_sync/local_sync_controller.dart';
 import 'package:simple_live_app/services/sync_service.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/settings/settings_card.dart';
 
 class LocalSyncPage extends GetView<LocalSyncController> {
@@ -14,7 +15,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text('局域网数据同步'),
         actions: [
           TextButton.icon(

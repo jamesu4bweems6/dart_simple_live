@@ -1,9 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/modules/category/category_controller.dart';
 import 'package:simple_live_app/modules/category/category_list_view.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class CategoryPage extends GetView<CategoryController> {
   const CategoryPage({super.key});
@@ -11,7 +12,7 @@ class CategoryPage extends GetView<CategoryController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         titleSpacing: 8,
         title: TabBar(
           controller: controller.tabController,
@@ -36,7 +37,7 @@ class CategoryPage extends GetView<CategoryController> {
               .toList(),
           labelPadding: AppStyle.edgeInsetsH20,
           isScrollable: true,
-          indicatorSize: TabBarIndicatorSize.label,
+          indicatorSize: TabBarIndicatorSize.tab,
         ),
       ),
       body: TabBarView(

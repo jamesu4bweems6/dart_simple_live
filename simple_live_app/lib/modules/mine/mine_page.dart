@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/log.dart';
@@ -9,6 +9,7 @@ import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/routes/route_path.dart';
 import 'package:simple_live_app/services/signalr_service.dart';
 import 'package:simple_live_app/widgets/liquid_glass_dock.dart';
+import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MinePage extends StatelessWidget {
@@ -27,7 +28,7 @@ class MinePage extends StatelessWidget {
       child: SafeArea(
         bottom: DockContentInset.bottomOf(context) == 0,
         child: ListView(
-          padding: AppStyle.edgeInsetsA4 + EdgeInsets.only(bottom: DockContentInset.bottomOf(context)),
+          padding: AppStyle.edgeInsetsA16 + EdgeInsets.only(bottom: DockContentInset.bottomOf(context)),
           children: [
             AppStyle.vGap12,
             ListTile(
@@ -38,7 +39,7 @@ class MinePage extends StatelessWidget {
               ),
               title: const Text(
                 "Slive",
-                style: TextStyle(height: 1.0),
+                style: TextStyle(fontSize: 30, fontWeight: FontWeight.w700, letterSpacing: -0.8),
               ),
               subtitle: const Text("我就默默看你表演"),
               trailing: const Icon(Icons.chevron_right),
@@ -55,11 +56,7 @@ class MinePage extends StatelessWidget {
                 ));
               },
             ),
-            Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.withAlpha(25),
-            ),
+            AppStyle.vGap24,
             _buildCard(
               context,
               children: [
@@ -76,59 +73,43 @@ class MinePage extends StatelessWidget {
                 ),
               ],
             ),
-            Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.withAlpha(25),
-            ),
-            ListTile(
-              leading: const Icon(Remix.account_circle_line),
-              title: const Text("平台配置"),
-              trailing: const Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
+            AppStyle.vGap24,
+            _buildCard(context, children: [
+              ListTile(
+                leading: const Icon(Remix.account_circle_line),
+                title: const Text("平台配置"),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                ),
+                onTap: () {
+                  Get.toNamed(RoutePath.kSettingsAccount);
+                },
               ),
-              onTap: () {
-                Get.toNamed(RoutePath.kSettingsAccount);
-              },
-            ),
-            Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.withAlpha(25),
-            ),
-            ListTile(
-              leading: const Icon(Icons.devices),
-              title: const Text("数据同步"),
-              trailing: const Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
+              ListTile(
+                leading: const Icon(Icons.devices),
+                title: const Text("数据同步"),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                ),
+                onTap: () {
+                  Get.toNamed(RoutePath.kSync);
+                },
               ),
-              onTap: () {
-                Get.toNamed(RoutePath.kSync);
-              },
-            ),
-            Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.withAlpha(25),
-            ),
-            ListTile(
-              leading: const Icon(Remix.link),
-              title: const Text("链接解析"),
-              trailing: const Icon(
-                Icons.chevron_right,
-                color: Colors.grey,
+              ListTile(
+                leading: const Icon(Remix.link),
+                title: const Text("链接解析"),
+                trailing: const Icon(
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                ),
+                onTap: () {
+                  Get.toNamed(RoutePath.kTools);
+                },
               ),
-              onTap: () {
-                Get.toNamed(RoutePath.kTools);
-              },
-            ),
-            Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.withAlpha(25),
-            ),
+            ]),
+            AppStyle.vGap24,
             _buildCard(
               context,
               children: [
@@ -216,11 +197,7 @@ class MinePage extends StatelessWidget {
                   ),
               ],
             ),
-            Divider(
-              indent: 12,
-              endIndent: 12,
-              color: Colors.grey.withAlpha(25),
-            ),
+            AppStyle.vGap24,
             _buildCard(
               context,
               children: [
@@ -274,16 +251,16 @@ class MinePage extends StatelessWidget {
   }
 
   Widget _buildCard(BuildContext context, {required List<Widget> children}) {
-    return Theme(
-      data: Theme.of(context).copyWith(
-        listTileTheme: ListTileThemeData(
-          shape: RoundedRectangleBorder(borderRadius: AppStyle.radius8),
-        ),
-      ),
+    return GlassCard(
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: children,
+        children: [
+          for (var i = 0; i < children.length; i++) ...[
+            if (i > 0) const Divider(indent: 56, endIndent: 20),
+            children[i],
+          ],
+        ],
       ),
     );
   }

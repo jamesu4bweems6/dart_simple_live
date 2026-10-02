@@ -1,8 +1,8 @@
-import 'package:material_ui/material_ui.dart';
-
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/category/detail/category_detail_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/keep_alive_wrapper.dart';
 import 'package:simple_live_app/widgets/live_room_card.dart';
 import 'package:simple_live_app/widgets/page_grid_view.dart';
@@ -17,7 +17,7 @@ class CategoryDetailPage extends GetView<CategoryDetailController> {
       c = 2;
     }
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: Text(controller.subCategory.name),
       ),
       body: KeepAliveWrapper(

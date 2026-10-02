@@ -1,8 +1,9 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/mine/account/bilibili/qr_login_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class BiliBiliQRLoginPage extends GetView<BiliBiliQRLoginController> {
   const BiliBiliQRLoginPage({super.key});
@@ -10,7 +11,7 @@ class BiliBiliQRLoginPage extends GetView<BiliBiliQRLoginController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("哔哩哔哩账号登录")),
+      appBar: GlassAppBar(title: const Text("哔哩哔哩账号登录")),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,

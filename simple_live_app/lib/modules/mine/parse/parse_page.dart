@@ -1,8 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/mine/parse/parse_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
+import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 
 class ParsePage extends GetView<ParseController> {
   const ParsePage({super.key});
@@ -10,7 +12,7 @@ class ParsePage extends GetView<ParseController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("链接解析"),
       ),
       body: ListView(
@@ -114,25 +116,13 @@ https://webcast.amemv.com/douyin/webcast/reflow/xxxxx
   }
 
   Widget buildCard({required BuildContext context, required Widget child}) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: AppStyle.radius8,
-        boxShadow: Get.isDarkMode
-            ? []
-            : [
-                BoxShadow(
-                  blurRadius: 8,
-                  color: Colors.grey.withAlpha(50),
-                )
-              ],
-      ),
-      margin: AppStyle.edgeInsetsB12,
-      child: Theme(
-        data: Theme.of(context).copyWith(
-          dividerColor: Colors.transparent,
+    return Padding(
+      padding: AppStyle.edgeInsetsB12,
+      child: GlassCard(
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: child,
         ),
-        child: child,
       ),
     );
   }

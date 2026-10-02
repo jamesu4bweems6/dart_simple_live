@@ -1,6 +1,7 @@
-import 'package:material_ui/material_ui.dart';
+import 'package:cupertino_ui/cupertino_ui.dart' show CupertinoPageTransitionsBuilder;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 
 class AppColors {
   static ColorScheme lightColorScheme = ColorScheme.fromSeed(
@@ -17,71 +18,148 @@ class AppColors {
 }
 
 class AppStyle {
-  static ThemeData light({String? fontFamily}) {
-    return ThemeData(
-      colorScheme: AppColors.lightColorScheme,
+  static ThemeData light({String? fontFamily, ColorScheme? colorScheme}) =>
+      _theme(Brightness.light, fontFamily, colorScheme ?? AppColors.lightColorScheme);
+
+  static ThemeData darkTheme({String? fontFamily, ColorScheme? colorScheme}) =>
+      _theme(Brightness.dark, fontFamily, colorScheme ?? AppColors.darkColorScheme);
+
+  static ThemeData _theme(Brightness brightness, String? fontFamily, ColorScheme scheme) {
+    final dark = brightness == Brightness.dark;
+    final foreground = dark ? const Color(0xFFF5F5F7) : const Color(0xFF1C1C1E);
+    final background = dark ? const Color(0xFF000000) : const Color(0xFFF2F2F7);
+    final surface = dark ? const Color(0xFF1C1C1E) : Colors.white;
+    final line = foreground.withAlpha(25);
+    final colors = scheme.copyWith(
+      surface: surface,
+      onSurface: foreground,
+      surfaceContainerLowest: background,
+      surfaceContainerLow: surface,
+      surfaceContainer: dark ? const Color(0xFF2C2C2E) : const Color(0xFFE9E9EF),
+      surfaceContainerHigh: dark ? const Color(0xFF323236) : const Color(0xFFE3E3EB),
+      surfaceContainerHighest: dark ? const Color(0xFF3A3A3C) : const Color(0xFFDCDCE4),
+    );
+    final rounded = RoundedRectangleBorder(borderRadius: BorderRadius.circular(24));
+    final theme = ThemeData(
+      brightness: brightness,
+      colorScheme: colors,
       useMaterial3: true,
       fontFamily: fontFamily,
+      scaffoldBackgroundColor: background,
+      canvasColor: background,
+      cardColor: surface,
+      dividerColor: line,
+      splashFactory: NoSplash.splashFactory,
       visualDensity: VisualDensity.standard,
-      appBarTheme: AppBarTheme(
-        //elevation: 0,
-        centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontFamily: fontFamily,
-          fontSize: 16,
-          color: AppColors.black333,
-        ),
-        foregroundColor: AppColors.black333,
-        systemOverlayStyle: SystemUiOverlayStyle.dark.copyWith(
-          systemNavigationBarColor: Colors.transparent,
-        ),
-      ),
     );
-  }
-
-  static ThemeData darkTheme({String? fontFamily}) {
-    return ThemeData.dark().copyWith(
-      colorScheme: AppColors.darkColorScheme,
-      visualDensity: VisualDensity.standard,
-      textTheme: ThemeData.dark().textTheme.apply(
-            fontFamily: fontFamily,
-          ),
-      primaryTextTheme: ThemeData().textTheme.apply(
-            fontFamily: fontFamily,
-          ),
+    return theme.copyWith(
       appBarTheme: AppBarTheme(
-        //elevation: 0,
-
+        backgroundColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        scrolledUnderElevation: 0,
         centerTitle: true,
-        titleTextStyle: TextStyle(
-          fontFamily: fontFamily,
-          fontSize: 16,
-          color: Colors.white,
-        ),
-        foregroundColor: Colors.white,
-        systemOverlayStyle: SystemUiOverlayStyle.light.copyWith(
+        toolbarHeight: 56,
+        foregroundColor: foreground,
+        titleTextStyle: TextStyle(fontFamily: fontFamily, fontSize: 17, fontWeight: FontWeight.w600, color: foreground),
+        systemOverlayStyle: (dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark).copyWith(
+          statusBarColor: Colors.transparent,
           systemNavigationBarColor: Colors.transparent,
         ),
       ),
-      // radioTheme: RadioThemeData(
-      //   fillColor: MaterialStateProperty.all(AppColors.darkColorScheme.primary),
-      // ),
-      // checkboxTheme: CheckboxThemeData(
-      //   fillColor: MaterialStateProperty.all(AppColors.darkColorScheme.primary),
-      // ),
-      // tabBarTheme: TabBarTheme(
-      //   labelColor: AppColors.darkColorScheme.primary,
-      //   unselectedLabelColor: Colors.white70,
-      //   indicator: RectangularIndicator(
-      //     color: Colors.white.withAlpha(50),
-      //     topLeftRadius: 24,
-      //     bottomLeftRadius: 24,
-      //     topRightRadius: 24,
-      //     bottomRightRadius: 24,
-      //     verticalPadding: 8,
-      //     horizontalPadding: 0,
-      //   ),
-      // ),
+      cardTheme: CardThemeData(elevation: 0, color: surface, surfaceTintColor: Colors.transparent, shape: rounded),
+      dialogTheme: DialogThemeData(
+        backgroundColor: surface.withAlpha(245),
+        surfaceTintColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        titleTextStyle: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w600, fontSize: 20),
+      ),
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: surface,
+        surfaceTintColor: Colors.transparent,
+        elevation: 0,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        clipBehavior: Clip.antiAlias,
+      ),
+      popupMenuTheme: PopupMenuThemeData(
+        color: surface.withAlpha(245),
+        surfaceTintColor: Colors.transparent,
+        elevation: 8,
+        shape: rounded,
+      ),
+      tabBarTheme: TabBarThemeData(
+        dividerColor: Colors.transparent,
+        labelColor: colors.primary,
+        unselectedLabelColor: foreground.withAlpha(160),
+        labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        unselectedLabelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+          color: colors.primary.withAlpha(dark ? 45 : 22),
+          borderRadius: BorderRadius.circular(22),
+        ),
+        indicatorColor: Colors.transparent,
+      ),
+      inputDecorationTheme: InputDecorationTheme(
+        filled: true,
+        fillColor: foreground.withAlpha(dark ? 16 : 10),
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+        enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+        focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(20), borderSide: BorderSide(color: colors.primary, width: 1.5)),
+      ),
+      listTileTheme: ListTileThemeData(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 2),
+        iconColor: colors.primary,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      ),
+      dividerTheme: DividerThemeData(color: line, thickness: 0.5, space: 1),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+        elevation: 0,
+        shape: const StadiumBorder(),
+        minimumSize: const Size(44, 44),
+        backgroundColor: colors.primary,
+        foregroundColor: colors.onPrimary,
+      )),
+      filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+        shape: const StadiumBorder(),
+        minimumSize: const Size(44, 44),
+      )),
+      outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+        shape: const StadiumBorder(),
+        minimumSize: const Size(44, 44),
+        side: BorderSide(color: line),
+      )),
+      textButtonTheme: TextButtonThemeData(
+          style: TextButton.styleFrom(
+        shape: const StadiumBorder(),
+        minimumSize: const Size(44, 44),
+      )),
+      iconButtonTheme: IconButtonThemeData(
+          style: IconButton.styleFrom(
+        minimumSize: const Size(44, 44),
+        shape: const CircleBorder(),
+      )),
+      navigationRailTheme: NavigationRailThemeData(
+        backgroundColor: Colors.transparent,
+        indicatorColor: colors.primary.withAlpha(28),
+        selectedIconTheme: IconThemeData(color: colors.primary),
+        unselectedIconTheme: IconThemeData(color: foreground.withAlpha(170)),
+      ),
+      sliderTheme: SliderThemeData(trackHeight: 6, activeTrackColor: colors.primary, inactiveTrackColor: line),
+      snackBarTheme: SnackBarThemeData(
+        behavior: SnackBarBehavior.floating,
+        shape: rounded,
+      ),
+      pageTransitionsTheme: const PageTransitionsTheme(builders: {
+        TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.macOS: CupertinoPageTransitionsBuilder(),
+        TargetPlatform.android: PredictiveBackPageTransitionsBuilder(),
+      }),
     );
   }
 

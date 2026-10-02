@@ -1,9 +1,10 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/app/constant.dart';
 import 'package:simple_live_app/app/sites.dart';
 import 'package:simple_live_app/modules/settings/indexed_settings/indexed_settings_controller.dart';
+import 'package:simple_live_app/widgets/glass_app_bar.dart';
 import 'package:simple_live_app/widgets/settings/settings_card.dart';
 
 class IndexedSettingsPage extends GetView<IndexedSettingsController> {
@@ -12,7 +13,7 @@ class IndexedSettingsPage extends GetView<IndexedSettingsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
+      appBar: GlassAppBar(
         title: const Text("主页设置"),
       ),
       body: ListView(

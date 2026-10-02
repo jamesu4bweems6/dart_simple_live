@@ -29,8 +29,8 @@ class LiveRoomCard extends StatelessWidget {
             children: [
               ClipRRect(
                 borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(8),
-                  topRight: Radius.circular(8),
+                  topLeft: Radius.circular(24),
+                  topRight: Radius.circular(24),
                 ),
                 child: NetImage(
                   item.cover,

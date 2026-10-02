@@ -17,6 +17,10 @@ import Flutter
       NativeLiquidGlassDockFactory(registrar: registrar),
       withId: "simple_live/native_liquid_glass_dock"
     )
+    registrar.register(
+      NativeLiquidGlassSurfaceFactory(messenger: registrar.messenger()),
+      withId: "simple_live/native_liquid_glass_surface"
+    )
   }
 
 }

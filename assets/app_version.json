@@ -1,7 +1,7 @@
 {
-    "version": "1.8.14",
-    "version_num": 10814,
-    "version_desc": "- fix: 进一步修正douyu断流问题 \n- tips: ios和macos用户请到action更新测试或者下载上游仓库版本",
+    "version": "1.8.15",
+    "version_num": 10815,
+    "version_desc": "- feat: 全页面统一 iOS 26 液态玻璃风格，导航栏、弹窗和播放器控制层接入原生系统材质 \n- feat: 统一深浅色、分组卡片、输入框与按钮样式，兼容旧版 iOS 和其他平台 \n- test: 增加玻璃材质触摸穿透、主题切换、小屏布局及键盘避让回归测试",
     "prerelease": false,
     "download_url": "https://github.com/SlotSun/dart_simple_live/releases"
 }

@@ -1,8 +1,9 @@
-import 'package:material_ui/material_ui.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
+import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
+import 'package:simple_live_app/widgets/glass_sheet.dart';
 
 class _MenuCheckController<T> extends GetxController {
   final RxList<T> selectedItems;
@@ -115,19 +116,13 @@ class SettingsMenuCheck<T> extends StatelessWidget {
   void _openMenu(BuildContext context, List<T> items, List<T> initialSelection) {
     final controller = _MenuCheckController<T>(initialSelection);
 
-    showModalBottomSheet(
+    showGlassBottomSheet(
       context: context,
       isScrollControlled: true,
       showDragHandle: false,
       useSafeArea: true,
       constraints: BoxConstraints(
         maxWidth: 600,
-      ),
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(12),
-          topRight: Radius.circular(12),
-        ),
       ),
       builder: (_) {
         return SafeArea(
