@@ -49,8 +49,8 @@ void main() {
     controller = Get.put(FollowUserController());
   });
 
-  tearDown(() async {
-    await Get.reset();
+  tearDown(() {
+    Get.reset();
   });
 
   test('adding a follow after an empty first load preserves service data', () async {
