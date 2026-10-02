@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -26,7 +27,7 @@ class AccountPage extends GetView<AccountController> {
             ),
           ),
           Obx(
-            () => ListTile(
+            () => NativeListTile(
               leading: Image.asset(
                 'assets/images/bilibili_2.png',
                 width: 36,
@@ -41,7 +42,7 @@ class AccountPage extends GetView<AccountController> {
             ),
           ),
           Obx(
-            () => ListTile(
+            () => NativeListTile(
               leading: Image.asset(
                 'assets/images/douyu.png',
                 width: 36,
@@ -58,7 +59,7 @@ class AccountPage extends GetView<AccountController> {
             ),
           ),
           Obx(
-            () => ListTile(
+            () => NativeListTile(
               leading: Image.asset(
                 'assets/images/huya.png',
                 width: 36,
@@ -81,7 +82,7 @@ class AccountPage extends GetView<AccountController> {
             ),
           ),
           Obx(
-            () => ListTile(
+            () => NativeListTile(
               leading: Image.asset(
                 'assets/images/douyin.png',
                 width: 36,

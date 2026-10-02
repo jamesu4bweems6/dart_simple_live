@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_control.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -27,7 +30,13 @@ class SettingsNumber extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    if (usesNativeIOS) {
+      return NativeSettingsRow(title: title, subtitle: subtitle, detail: displayValue ?? '$value$unit',
+        kind: 'stepper', configuration: {'value': value, 'min': min, 'max': max, 'step': step,
+          'enabled': onChanged != null}, onTap: () => openSilder(context),
+        onChanged: (value) => onChanged?.call((value as num).round()));
+    }
+    return NativeListTile(
       visualDensity: VisualDensity.compact,
       title: Text(
         title,
@@ -52,7 +61,7 @@ class SettingsNumber extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            IconButton(
+            NativeIconButton(
               padding: AppStyle.edgeInsetsA4,
               constraints: const BoxConstraints(
                 minHeight: 32,
@@ -74,7 +83,7 @@ class SettingsNumber extends StatelessWidget {
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.grey),
             ),
-            IconButton(
+            NativeIconButton(
               padding: AppStyle.edgeInsetsA4,
               constraints: const BoxConstraints(
                 minHeight: 32,
@@ -129,7 +138,7 @@ class SettingsNumber extends StatelessWidget {
               ),
             ),
             Obx(
-              () => Slider(
+              () => NativeSlider(
                 value: newValue.value.toDouble(),
                 min: min.toDouble(),
                 max: max.toDouble(),
@@ -140,7 +149,7 @@ class SettingsNumber extends StatelessWidget {
             ),
             Padding(
               padding: AppStyle.edgeInsetsH16,
-              child: TextButton(
+              child: NativeTextButton(
                 onPressed: () {
                   onChanged?.call(newValue.value);
                   Get.back();

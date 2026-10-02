@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -96,7 +98,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
           Visibility(
             visible: controller.roomId.isEmpty,
             child: SettingsCard(
-              child: ListTile(
+              child: NativeListTile(
                 visualDensity: VisualDensity.compact,
                 leading: const Icon(Remix.timer_line),
                 title: Obx(
@@ -117,7 +119,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
           ),
           SettingsCard(
             child: Obx(
-              () => ListTile(
+              () => NativeListTile(
                 contentPadding: AppStyle.edgeInsetsL12,
                 title: SelectableText(
                   controller.currentRoomId.value,
@@ -127,7 +129,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    IconButton(
+                    NativeIconButton(
                       icon: const Icon(
                         Icons.copy,
                         size: 20,
@@ -136,7 +138,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
                         Utils.copyToClipboard(controller.currentRoomId.value);
                       },
                     ),
-                    IconButton(
+                    NativeIconButton(
                       icon: const Icon(
                         Icons.qr_code,
                         size: 20,
@@ -162,7 +164,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.heart_line),
                   title: const Text("发送关注列表"),
                   trailing: const Icon(Icons.chevron_right),
@@ -171,7 +173,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Icons.history),
                   title: const Text("发送观看记录"),
                   trailing: const Icon(Icons.chevron_right),
@@ -180,7 +182,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.shield_keyhole_line),
                   title: const Text("发送弹幕屏蔽词"),
                   trailing: const Icon(Icons.chevron_right),
@@ -189,7 +191,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.account_circle_line),
                   title: const Text("发送哔哩哔哩账号"),
                   trailing: const Icon(Icons.chevron_right),
@@ -217,7 +219,7 @@ class RemoteSyncRoomPage extends GetView<RemoteSyncRoomController> {
                 physics: const NeverScrollableScrollPhysics(),
                 itemBuilder: (BuildContext context, int index) {
                   var user = controller.roomUsers[index];
-                  return ListTile(
+                  return NativeListTile(
                     visualDensity: VisualDensity.compact,
                     leading: SizedBox(
                       width: 48,

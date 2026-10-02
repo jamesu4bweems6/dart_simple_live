@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -35,7 +36,7 @@ class IndexedSettingsPage extends GetView<IndexedSettingsController> {
                 children: controller.homeSort.map(
                   (key) {
                     var e = Constant.allHomePages[key]!;
-                    return ListTile(
+                    return NativeListTile(
                       key: ValueKey(e.title),
                       title: Text(e.title),
                       visualDensity: VisualDensity.compact,
@@ -63,7 +64,7 @@ class IndexedSettingsPage extends GetView<IndexedSettingsController> {
                 children: controller.siteSort.where((key) => Sites.allSites[key]?.name != 'Twitch').map(
                   (key) {
                     var e = Sites.allSites[key]!;
-                    return ListTile(
+                    return NativeListTile(
                       key: ValueKey(e.id),
                       visualDensity: VisualDensity.compact,
                       title: Text(e.name),

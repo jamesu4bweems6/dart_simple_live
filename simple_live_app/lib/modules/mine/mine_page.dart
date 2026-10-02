@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/glass_dialog.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -31,7 +33,7 @@ class MinePage extends StatelessWidget {
           padding: AppStyle.edgeInsetsA16 + EdgeInsets.only(bottom: DockContentInset.bottomOf(context)),
           children: [
             AppStyle.vGap12,
-            ListTile(
+            NativeListTile(
               leading: Image.asset(
                 'assets/images/logo.png',
                 width: 56,
@@ -44,7 +46,7 @@ class MinePage extends StatelessWidget {
               subtitle: const Text("我就默默看你表演"),
               trailing: const Icon(Icons.chevron_right),
               onTap: () {
-                Get.dialog(AboutDialog(
+                showGlassDialog(AboutDialog(
                   applicationIcon: Image.asset(
                     'assets/images/logo.png',
                     width: 48,
@@ -60,7 +62,7 @@ class MinePage extends StatelessWidget {
             _buildCard(
               context,
               children: [
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.history_line),
                   title: const Text("观看记录"),
                   trailing: const Icon(
@@ -75,7 +77,7 @@ class MinePage extends StatelessWidget {
             ),
             AppStyle.vGap24,
             _buildCard(context, children: [
-              ListTile(
+              NativeListTile(
                 leading: const Icon(Remix.account_circle_line),
                 title: const Text("平台配置"),
                 trailing: const Icon(
@@ -86,7 +88,7 @@ class MinePage extends StatelessWidget {
                   Get.toNamed(RoutePath.kSettingsAccount);
                 },
               ),
-              ListTile(
+              NativeListTile(
                 leading: const Icon(Icons.devices),
                 title: const Text("数据同步"),
                 trailing: const Icon(
@@ -97,7 +99,7 @@ class MinePage extends StatelessWidget {
                   Get.toNamed(RoutePath.kSync);
                 },
               ),
-              ListTile(
+              NativeListTile(
                 leading: const Icon(Remix.link),
                 title: const Text("链接解析"),
                 trailing: const Icon(
@@ -113,7 +115,7 @@ class MinePage extends StatelessWidget {
             _buildCard(
               context,
               children: [
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.moon_line),
                   title: const Text("外观设置"),
                   trailing: const Icon(
@@ -124,7 +126,7 @@ class MinePage extends StatelessWidget {
                     Get.toNamed(RoutePath.kAppstyleSetting);
                   },
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.home_2_line),
                   title: const Text("主页设置"),
                   trailing: const Icon(
@@ -135,7 +137,7 @@ class MinePage extends StatelessWidget {
                     Get.toNamed(RoutePath.kSettingsIndexed);
                   },
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.play_circle_line),
                   title: const Text("直播设置"),
                   trailing: const Icon(
@@ -146,7 +148,7 @@ class MinePage extends StatelessWidget {
                     Get.toNamed(RoutePath.kSettingsPlay);
                   },
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.text),
                   title: const Text("弹幕设置"),
                   trailing: const Icon(
@@ -157,7 +159,7 @@ class MinePage extends StatelessWidget {
                     Get.toNamed(RoutePath.kSettingsDanmu);
                   },
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.timer_2_line),
                   title: const Text("定时关闭"),
                   trailing: const Icon(
@@ -168,7 +170,7 @@ class MinePage extends StatelessWidget {
                     Get.toNamed(RoutePath.kSettingsAutoExit);
                   },
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.apps_line),
                   title: const Text("其他设置"),
                   trailing: const Icon(
@@ -180,7 +182,7 @@ class MinePage extends StatelessWidget {
                   },
                 ),
                 if (kDebugMode)
-                  ListTile(
+                  NativeListTile(
                     leading: const Icon(Remix.apps_line),
                     title: const Text("测试"),
                     trailing: const Icon(
@@ -201,7 +203,7 @@ class MinePage extends StatelessWidget {
             _buildCard(
               context,
               children: [
-                const ListTile(
+                const NativeListTile(
                   leading: Icon(Remix.error_warning_line),
                   title: Text("免责声明"),
                   trailing: Icon(
@@ -210,7 +212,7 @@ class MinePage extends StatelessWidget {
                   ),
                   onTap: Utils.showStatement,
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.github_line),
                   title: const Text("开源主页"),
                   trailing: const Icon(
@@ -224,7 +226,7 @@ class MinePage extends StatelessWidget {
                     );
                   },
                 ),
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.upload_2_line),
                   title: const Text("检查更新"),
                   trailing: Row(

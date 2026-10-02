@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_tabs.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -14,7 +15,7 @@ class CategoryPage extends GetView<CategoryController> {
     return Scaffold(
       appBar: GlassAppBar(
         titleSpacing: 8,
-        title: TabBar(
+        title: NativeTabBar(
           controller: controller.tabController,
           padding: EdgeInsets.zero,
           tabAlignment: TabAlignment.center,

@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -16,13 +18,13 @@ class DanmuShieldPage extends GetView<DanmuShieldController> {
       body: ListView(
         padding: AppStyle.edgeInsetsA12,
         children: [
-          TextField(
+          NativeTextField(
             controller: controller.textEditingController,
             decoration: InputDecoration(
               contentPadding: AppStyle.edgeInsetsH12,
               border: const OutlineInputBorder(),
               hintText: "请输入关键词或正则表达式",
-              suffixIcon: TextButton.icon(
+              suffixIcon: NativeTextButton.icon(
                 onPressed: controller.add,
                 icon: const Icon(Icons.add),
                 label: const Text("添加"),

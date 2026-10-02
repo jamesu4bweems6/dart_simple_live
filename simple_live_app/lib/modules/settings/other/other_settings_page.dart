@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -31,21 +33,21 @@ class OtherSettingsPage extends GetView<OtherSettingsController> {
               child: Row(
                 children: [
                   Expanded(
-                    child: TextButton.icon(
+                    child: NativeTextButton.icon(
                       onPressed: controller.exportConfig,
                       label: const Text("导出配置"),
                       icon: const Icon(Remix.export_line),
                     ),
                   ),
                   Expanded(
-                    child: TextButton.icon(
+                    child: NativeTextButton.icon(
                       onPressed: controller.importConfig,
                       label: const Text("导入配置"),
                       icon: const Icon(Remix.import_line),
                     ),
                   ),
                   Expanded(
-                    child: TextButton.icon(
+                    child: NativeTextButton.icon(
                       onPressed: controller.resetDefaultConfig,
                       label: const Text("重置配置"),
                       icon: const Icon(Remix.restart_line),
@@ -231,14 +233,14 @@ class OtherSettingsPage extends GetView<OtherSettingsController> {
               ],
             ),
           ),
-          ListTile(
+          NativeListTile(
             contentPadding: AppStyle.edgeInsetsL12,
             visualDensity: VisualDensity.compact,
             title: Text(
               "日志列表",
               style: Get.textTheme.titleSmall,
             ),
-            trailing: TextButton.icon(
+            trailing: NativeTextButton.icon(
               onPressed: () {
                 controller.cleanLog();
               },
@@ -255,7 +257,7 @@ class OtherSettingsPage extends GetView<OtherSettingsController> {
                   separatorBuilder: (context, index) => AppStyle.divider,
                   itemBuilder: (context, index) {
                     var item = controller.logFiles[index];
-                    return ListTile(
+                    return NativeListTile(
                       visualDensity: VisualDensity.compact,
                       contentPadding: AppStyle.edgeInsetsL12.copyWith(right: 4),
                       title: Text(item.name),
@@ -264,13 +266,13 @@ class OtherSettingsPage extends GetView<OtherSettingsController> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (!Platform.isLinux)
-                            IconButton(
+                            NativeIconButton(
                               onPressed: () {
                                 controller.shareLogFile(item);
                               },
                               icon: const Icon(Icons.share),
                             ),
-                          IconButton(
+                          NativeIconButton(
                             onPressed: () {
                               controller.saveLogFile(item);
                             },

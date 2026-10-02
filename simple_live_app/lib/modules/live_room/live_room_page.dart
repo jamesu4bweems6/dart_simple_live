@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
+import 'package:simple_live_app/widgets/native_ios/native_tabs.dart';
 import 'dart:io';
 
 import 'package:floating/floating.dart';
@@ -72,12 +75,12 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      TextButton.icon(
+                      NativeTextButton.icon(
                         onPressed: controller.copyErrorDetail,
                         icon: const Icon(Remix.file_copy_line),
                         label: const Text("复制信息"),
                       ),
-                      TextButton.icon(
+                      NativeTextButton.icon(
                         onPressed: controller.refreshRoom,
                         icon: const Icon(Remix.refresh_line),
                         label: const Text("刷新"),
@@ -172,7 +175,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
           ),
           child: Row(
             children: [
-              TextButton.icon(
+              NativeTextButton.icon(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 14),
                 ),
@@ -182,7 +185,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
               ),
               Obx(
                 () => controller.followed.value
-                    ? TextButton.icon(
+                    ? NativeTextButton.icon(
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(fontSize: 14),
                         ),
@@ -190,7 +193,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                         icon: const Icon(Remix.heart_fill),
                         label: const Text("取消关注"),
                       )
-                    : TextButton.icon(
+                    : NativeTextButton.icon(
                         style: TextButton.styleFrom(
                           textStyle: const TextStyle(fontSize: 14),
                         ),
@@ -200,7 +203,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                       ),
               ),
               const Expanded(child: Center()),
-              TextButton.icon(
+              NativeTextButton.icon(
                 style: TextButton.styleFrom(
                   textStyle: const TextStyle(fontSize: 14),
                 ),
@@ -209,7 +212,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 label: const Text("分享"),
               ),
               (Platform.isWindows || Platform.isLinux)
-                  ? TextButton.icon(
+                  ? NativeTextButton.icon(
                       style: TextButton.styleFrom(
                         textStyle: const TextStyle(fontSize: 14),
                       ),
@@ -217,7 +220,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                       icon: const Icon(Remix.chrome_fill),
                       label: const Text("浏览器打开"),
                     )
-                  : TextButton.icon(
+                  : NativeTextButton.icon(
                       style: TextButton.styleFrom(
                         textStyle: const TextStyle(fontSize: 14),
                       ),
@@ -379,7 +382,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
           Expanded(
             child: Obx(
               () => controller.followed.value
-                  ? TextButton.icon(
+                  ? NativeTextButton.icon(
                       style: TextButton.styleFrom(
                         textStyle: const TextStyle(fontSize: 14),
                       ),
@@ -387,7 +390,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                       icon: const Icon(Remix.heart_fill),
                       label: const Text("取消关注"),
                     )
-                  : TextButton.icon(
+                  : NativeTextButton.icon(
                       style: TextButton.styleFrom(
                         textStyle: const TextStyle(fontSize: 14),
                       ),
@@ -398,7 +401,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
             ),
           ),
           Expanded(
-            child: TextButton.icon(
+            child: NativeTextButton.icon(
               style: TextButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 14),
               ),
@@ -408,7 +411,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
             ),
           ),
           Expanded(
-            child: TextButton.icon(
+            child: NativeTextButton.icon(
               style: TextButton.styleFrom(
                 textStyle: const TextStyle(fontSize: 14),
               ),
@@ -428,7 +431,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
         length: 4,
         child: Column(
           children: [
-            TabBar(
+            NativeTabBar(
               indicatorSize: TabBarIndicatorSize.tab,
               labelPadding: EdgeInsets.zero,
               indicatorWeight: 1.0,
@@ -477,7 +480,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                           child: Positioned(
                             right: 12,
                             bottom: 12,
-                            child: ElevatedButton.icon(
+                            child: NativeElevatedButton.icon(
                               onPressed: () {
                                 controller.disableAutoScroll.value = false;
                                 controller.chatScrollToBottom();
@@ -611,7 +614,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
         Obx(
           () => Visibility(
             visible: controller.autoExitEnable.value,
-            child: ListTile(
+            child: NativeListTile(
               leading: const Icon(Icons.timer_outlined),
               visualDensity: VisualDensity.compact,
               title: Text("${parseDuration(controller.countdown.value)}后自动关闭"),
@@ -754,7 +757,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
 
   List<Widget> buildAppbarActions(BuildContext context) {
     return [
-      IconButton(
+      NativeIconButton(
         onPressed: () {
           showMore();
         },
@@ -777,7 +780,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.refresh),
               title: const Text("刷新"),
               trailing: const Icon(Icons.chevron_right),
@@ -785,7 +788,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.refreshRoom();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.play_circle_outline),
               trailing: const Icon(Icons.chevron_right),
               title: const Text("切换清晰度"),
@@ -794,7 +797,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.showQualitySheet();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.switch_video_outlined),
               title: const Text("切换线路"),
               trailing: const Icon(Icons.chevron_right),
@@ -803,7 +806,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.showPlayUrlsSheet();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.aspect_ratio_outlined),
               title: const Text("画面尺寸"),
               trailing: const Icon(Icons.chevron_right),
@@ -812,7 +815,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.showPlayerSettingsSheet();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.camera_alt_outlined),
               title: const Text("截图"),
               trailing: const Icon(Icons.chevron_right),
@@ -822,7 +825,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
             ),
             Visibility(
               visible: Platform.isAndroid,
-              child: ListTile(
+              child: NativeListTile(
                 leading: const Icon(Icons.picture_in_picture),
                 title: const Text("小窗播放"),
                 trailing: const Icon(Icons.chevron_right),
@@ -832,7 +835,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 },
               ),
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.timer_outlined),
               title: const Text("定时关闭"),
               trailing: const Icon(Icons.chevron_right),
@@ -841,7 +844,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.showAutoExitSheet();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.share_sharp),
               title: const Text("分享直播间"),
               trailing: const Icon(Icons.chevron_right),
@@ -850,7 +853,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.share();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.copy),
               title: const Text("复制链接"),
               trailing: const Icon(Icons.chevron_right),
@@ -859,7 +862,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.copyUrl();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.open_in_new),
               title: const Text("APP 中打开"),
               trailing: const Icon(Icons.chevron_right),
@@ -868,7 +871,7 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 controller.openNaviteAPP();
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Icons.info_outline_rounded),
               title: const Text("播放信息"),
               trailing: const Icon(Icons.chevron_right),

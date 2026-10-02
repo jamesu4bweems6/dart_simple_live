@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -266,7 +267,7 @@ class MyApp extends StatelessWidget {
                       bottom: 100 + context.mediaQueryViewPadding.bottom,
                       child: Opacity(
                         opacity: 0.4,
-                        child: ElevatedButton(
+                        child: NativeElevatedButton(
                           child: const Text("DEBUG LOG"),
                           onPressed: () {
                             Get.bottomSheet(

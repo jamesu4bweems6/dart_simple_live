@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 import 'dart:math' as math;
 
@@ -57,7 +60,7 @@ class Utils {
     bool selectable = false,
     List<Widget>? actions,
   }) async {
-    var result = await Get.dialog(
+    var result = await showGlassDialog(
       GlassAlertDialog(
         title: Text(title),
         content: Container(
@@ -73,11 +76,11 @@ class Utils {
         ),
         actions: [
           ...?actions,
-          TextButton(
+          NativeTextButton(
             onPressed: (() => Get.back(result: false)),
             child: Text(cancel.isEmpty ? "取消" : cancel),
           ),
-          TextButton(
+          NativeTextButton(
             onPressed: (() => Get.back(result: true)),
             child: Text(confirm.isEmpty ? "确定" : confirm),
           ),
@@ -93,7 +96,7 @@ class Utils {
   /// - `confirm` 确认按钮内容，留空为确定
   static Future<bool> showMessageDialog(String content,
       {String title = '', String confirm = '', bool selectable = false}) async {
-    var result = await Get.dialog(
+    var result = await showGlassDialog(
       GlassAlertDialog(
         title: Text(title),
         content: Padding(
@@ -101,7 +104,7 @@ class Utils {
           child: selectable ? SelectableText(content) : Text(content),
         ),
         actions: [
-          TextButton(
+          NativeTextButton(
             onPressed: (() => Get.back(result: true)),
             child: Text(confirm.isEmpty ? "确定" : confirm),
           ),
@@ -148,10 +151,10 @@ class Utils {
                 data: MediaQuery.of(context).copyWith(padding: EdgeInsets.zero),
                 child: Column(
                   children: [
-                    ListTile(
+                    NativeListTile(
                       visualDensity: VisualDensity.compact,
                       contentPadding: EdgeInsets.zero,
-                      leading: IconButton(
+                      leading: NativeIconButton(
                         onPressed: () {
                           SmartDialog.dismiss(status: SmartStatus.allCustom).then(
                             (value) => onDismiss?.call(),
@@ -197,12 +200,12 @@ class Utils {
       ),
       builder: (_) => Column(
         children: [
-          ListTile(
+          NativeListTile(
             contentPadding: const EdgeInsets.only(
               left: 12,
             ),
             title: Text(title),
-            trailing: IconButton(
+            trailing: NativeIconButton(
               onPressed: Get.back,
               icon: const Icon(Remix.close_line),
             ),
@@ -230,12 +233,12 @@ class Utils {
     TextValidate? validate,
   }) async {
     final TextEditingController textEditingController = TextEditingController(text: content);
-    var result = await Get.dialog(
+    var result = await showGlassDialog(
       GlassAlertDialog(
         title: Text(title),
         content: Padding(
           padding: AppStyle.edgeInsetsT12,
-          child: TextField(
+          child: NativeTextField(
             controller: textEditingController,
             decoration: InputDecoration(
               border: const OutlineInputBorder(),
@@ -250,11 +253,11 @@ class Utils {
           ),
         ),
         actions: [
-          TextButton(
+          NativeTextButton(
             onPressed: Get.back,
             child: const Text("取消"),
           ),
-          TextButton(
+          NativeTextButton(
             onPressed: () {
               if (validate != null && !validate(textEditingController.text)) {
                 return;
@@ -284,7 +287,7 @@ class Utils {
     String cancel = '',
   }) async {
     final controllers = items.map((item) => TextEditingController(text: item.value)).toList();
-    final result = await Get.dialog<Map<String, String>>(
+    final result = await showGlassDialog<Map<String, String>>(
       GlassAlertDialog(
         title: Text(title),
         content: SingleChildScrollView(
@@ -293,7 +296,7 @@ class Utils {
             children: [
               for (int i = 0; i < items.length; i++) ...[
                 if (i > 0) const SizedBox(height: 12),
-                TextField(
+                NativeTextField(
                   controller: controllers[i],
                   autofocus: i == 0,
                   obscureText: items[i].obscureText,
@@ -310,13 +313,13 @@ class Utils {
           ),
         ),
         actions: [
-          TextButton(
+          NativeTextButton(
             onPressed: Get.back,
             child: Text(
               cancel.isEmpty ? '取消' : cancel,
             ),
           ),
-          TextButton(
+          NativeTextButton(
             onPressed: () {
               for (int i = 0; i < items.length; i++) {
                 final validate = items[i].validate;
@@ -348,7 +351,7 @@ class Utils {
     T value, {
     String title = '',
   }) async {
-    var result = await Get.dialog(
+    var result = await showGlassDialog(
       GlassSimpleDialog(
         title: Text(title),
         children: [
@@ -360,7 +363,7 @@ class Utils {
             child: Column(
               children: contents
                   .map(
-                    (e) => RadioListTile<T>(
+                    (e) => NativeRadioListTile<T>(
                       title: Text(e.toString()),
                       value: e,
                     ),
@@ -379,14 +382,14 @@ class Utils {
     Widget? title,
     List<Widget>? actions,
   }) async {
-    var result = await Get.dialog(
+    var result = await showGlassDialog(
       GlassAlertDialog(
         title: title ?? const Text("帮助"),
         scrollable: true,
         content: SingleChildScrollView(child: ListBody(children: content)),
         actions: actions ??
             [
-              TextButton(
+              NativeTextButton(
                 onPressed: Get.back,
                 child: const Text("确定"),
               ),
@@ -416,7 +419,7 @@ class Utils {
     T value, {
     String title = '',
   }) async {
-    var result = await Get.dialog(
+    var result = await showGlassDialog(
       GlassSimpleDialog(
         title: Text(title),
         children: [
@@ -428,7 +431,7 @@ class Utils {
             child: Column(
               children: contents.keys
                   .map(
-                    (e) => RadioListTile<T>(
+                    (e) => NativeRadioListTile<T>(
                       title: Text((contents[e] ?? '-').tr),
                       value: e,
                     ),
@@ -448,7 +451,7 @@ class Utils {
       CommonRequest request = CommonRequest();
       var versionInfo = await request.checkUpdate();
       if (versionInfo.versionNum > currentVer) {
-        Get.dialog(
+        showGlassDialog(
           GlassAlertDialog(
             title: Text(
               "发现新版本 ${versionInfo.version}",
@@ -465,7 +468,7 @@ class Utils {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Expanded(
-                    child: TextButton(
+                    child: NativeTextButton(
                       onPressed: () {
                         Get.back();
                       },
@@ -474,7 +477,7 @@ class Utils {
                   ),
                   AppStyle.hGap12,
                   Expanded(
-                    child: ElevatedButton(
+                    child: NativeElevatedButton(
                       style: ElevatedButton.styleFrom(
                         elevation: 0,
                       ),

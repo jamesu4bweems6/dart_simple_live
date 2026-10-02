@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
+import 'package:simple_live_app/widgets/native_ios/native_tabs.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -14,7 +16,7 @@ class HomePage extends GetView<HomeController> {
     return Scaffold(
       appBar: GlassAppBar(
         titleSpacing: 8,
-        title: TabBar(
+        title: NativeTabBar(
           controller: controller.tabController,
           labelPadding: AppStyle.edgeInsetsH20,
           isScrollable: true,
@@ -40,7 +42,7 @@ class HomePage extends GetView<HomeController> {
               .toList(),
         ),
         actions: [
-          IconButton(
+          NativeIconButton(
             onPressed: controller.toSearch,
             icon: const Icon(Icons.search),
           )

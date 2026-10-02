@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_time_picker.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -258,7 +259,7 @@ class FollowSettingsPage extends GetView<FollowAppSettingsController> {
   }
 
   void setTimer(BuildContext context) async {
-    var value = await showTimePicker(
+    var value = await showNativeTimePicker(
       context: context,
       initialTime: TimeOfDay(
         hour: controller.appC.autoUpdateFollowDuration.value ~/ 60,

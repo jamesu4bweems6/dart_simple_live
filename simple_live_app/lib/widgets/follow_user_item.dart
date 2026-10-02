@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 import 'package:remixicon/remixicon.dart';
@@ -25,7 +27,7 @@ class FollowUserItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var site = Sites.allSites[item.siteId]!;
-    return ListTile(
+    return NativeListTile(
       contentPadding: AppStyle.edgeInsetsL16.copyWith(right: 4),
       leading: NetImage(
         item.face,
@@ -117,7 +119,7 @@ class FollowUserItem extends StatelessWidget {
             )
           : (onRemove == null
               ? null
-              : IconButton(
+              : NativeIconButton(
                   onPressed: () {
                     onRemove?.call();
                   },

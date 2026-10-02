@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -20,7 +22,7 @@ class HistoryPage extends GetView<HistoryController> {
       appBar: GlassAppBar(
         title: const Text("观看记录"),
         actions: [
-          TextButton.icon(
+          NativeTextButton.icon(
             onPressed: controller.clean,
             icon: const Icon(Icons.delete_outline),
             label: const Text("清空"),
@@ -53,7 +55,7 @@ class HistoryPage extends GetView<HistoryController> {
             onDismissed: (_) {
               controller.removeItem(item);
             },
-            child: ListTile(
+            child: NativeListTile(
               leading: NetImage(
                 item.face,
                 width: 48,

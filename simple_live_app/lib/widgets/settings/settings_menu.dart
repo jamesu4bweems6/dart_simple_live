@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -23,7 +24,7 @@ class SettingsMenu<T> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
+    return NativeListTile(
       visualDensity: VisualDensity.compact,
       title: Text(
         title,
@@ -76,7 +77,7 @@ class SettingsMenu<T> extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: valueMap.keys
                   .map(
-                    (e) => RadioListTile(
+                    (e) => NativeRadioListTile(
                       value: e,
                       title: Text(
                         (valueMap[e]?.tr) ?? "???",

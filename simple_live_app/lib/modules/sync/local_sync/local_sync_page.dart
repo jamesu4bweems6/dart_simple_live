@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -18,7 +21,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
       appBar: GlassAppBar(
         title: const Text('局域网数据同步'),
         actions: [
-          TextButton.icon(
+          NativeTextButton.icon(
             onPressed: controller.showInfo,
             icon: const Icon(Icons.qr_code),
             label: const Text("信息"),
@@ -35,7 +38,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextField(
+                  NativeTextField(
                     controller: controller.addressController,
                     onSubmitted: (e) {
                       controller.connect();
@@ -47,7 +50,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
                       border: const OutlineInputBorder(),
                       suffixIcon: Visibility(
                         visible: Platform.isAndroid || Platform.isIOS,
-                        child: TextButton.icon(
+                        child: NativeTextButton.icon(
                           onPressed: controller.toScanQr,
                           icon: const Icon(Remix.qr_scan_line),
                           label: const Text("扫一扫"),
@@ -56,7 +59,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
                     ),
                   ),
                   AppStyle.vGap12,
-                  ElevatedButton(
+                  NativeElevatedButton(
                     onPressed: () {
                       controller.connect();
                     },
@@ -67,7 +70,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
             ),
           ),
           AppStyle.vGap12,
-          ListTile(
+          NativeListTile(
             title: Obx(
               () => Text(
                 "已发现设备(${SyncService.instance.scanClients.length})",
@@ -76,7 +79,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
             ),
             visualDensity: VisualDensity.compact,
             contentPadding: AppStyle.edgeInsetsH12,
-            trailing: IconButton(
+            trailing: NativeIconButton(
               visualDensity: VisualDensity.compact,
               onPressed: () {
                 SyncService.instance.refreshClients();
@@ -94,7 +97,7 @@ class LocalSyncPage extends GetView<LocalSyncController> {
                 itemCount: SyncService.instance.scanClients.length,
                 itemBuilder: (BuildContext context, int index) {
                   var client = SyncService.instance.scanClients[index];
-                  return ListTile(
+                  return NativeListTile(
                     title: Text(client.name),
                     subtitle: Text(client.address),
                     trailing: const Icon(Icons.chevron_right),

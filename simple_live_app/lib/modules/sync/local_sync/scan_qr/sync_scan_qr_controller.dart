@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'dart:async';
 
 import 'package:material_ui/material_ui.dart';
@@ -54,7 +55,7 @@ class SyncScanQRControlelr extends BaseController {
       title: '请选择地址',
       child: ListView.builder(
         itemBuilder: (_, i) {
-          return ListTile(
+          return NativeListTile(
             title: Text(addressList[i]),
             onTap: () {
               Get.back(result: addressList[i]);

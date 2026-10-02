@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_time_picker.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -59,7 +60,7 @@ class AutoExitSettingsPage extends GetView<AppSettingsController> {
   }
 
   void setTimer(BuildContext context) async {
-    var value = await showTimePicker(
+    var value = await showNativeTimePicker(
       context: context,
       initialTime: TimeOfDay(
         hour: controller.autoExitDuration.value ~/ 60,

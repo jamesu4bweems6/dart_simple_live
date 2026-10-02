@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:qr_code_scanner_plus/qr_code_scanner_plus.dart';
@@ -13,14 +14,14 @@ class SyncScanQRPage extends GetView<SyncScanQRControlelr> {
       appBar: GlassAppBar(
         title: const Text('扫描二维码'),
         actions: [
-          IconButton(
+          NativeIconButton(
             onPressed: () {
               controller.qrController?.toggleFlash();
             },
             icon: const Icon(Icons.flash_on),
           ),
           // 反转摄像头
-          IconButton(
+          NativeIconButton(
             onPressed: () {
               controller.qrController?.flipCamera();
             },

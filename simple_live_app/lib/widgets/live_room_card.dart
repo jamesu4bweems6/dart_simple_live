@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -115,7 +116,7 @@ class LiveRoomCard extends StatelessWidget {
                 ),
                 if (onFollowRemove != null) ...[
                   const SizedBox(width: 4),
-                  IconButton(
+                  NativeIconButton(
                     onPressed: onFollowRemove,
                     visualDensity: VisualDensity.compact,
                     padding: EdgeInsets.zero,

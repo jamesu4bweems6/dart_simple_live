@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -53,11 +54,11 @@ class ParseController extends GetxController {
 
         return;
       }
-      var result = await Get.dialog(GlassSimpleDialog(
+      var result = await showGlassDialog(GlassSimpleDialog(
         title: const Text("选择清晰度"),
         children: qualites
             .map(
-              (e) => ListTile(
+              (e) => NativeListTile(
                 title: Text(
                   e.quality,
                   textAlign: TextAlign.center,
@@ -75,11 +76,11 @@ class ParseController extends GetxController {
       SmartDialog.showLoading(msg: "");
       var playUrl = await site.liveSite.getPlayUrls(detail: detail, quality: result);
       SmartDialog.dismiss(status: SmartStatus.loading);
-      await Get.dialog(GlassSimpleDialog(
+      await showGlassDialog(GlassSimpleDialog(
         title: const Text("选择线路"),
         children: playUrl.urls
             .map(
-              (e) => ListTile(
+              (e) => NativeListTile(
                 title: Text(
                   "线路${playUrl.urls.indexOf(e) + 1}",
                 ),

@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/widgets/liquid_glass_surface.dart';
 
@@ -23,7 +24,7 @@ class DesktopRefreshButton extends StatelessWidget {
                   ),
                 ),
               )
-            : IconButton(
+            : NativeIconButton(
                 onPressed: onPressed,
                 icon: const Icon(Icons.refresh),
               ),

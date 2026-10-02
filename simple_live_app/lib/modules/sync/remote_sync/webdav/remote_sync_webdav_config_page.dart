@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
@@ -43,7 +44,7 @@ class _RemoteSyncWebDAVConfigPageState extends State<RemoteSyncWebDAVConfigPage>
         title: const Text("WebDAV账号配置"),
         centerTitle: true,
         actions: [
-          IconButton(
+          NativeIconButton(
             icon: const Icon(Icons.help_outline),
             onPressed: () {
               Utils.showInformationHelpDialog(

@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -195,7 +196,7 @@ class AppStyleSettingController extends GetxController {
   }
 
   void changeTheme() {
-    Get.dialog(
+    showGlassDialog(
       GlassSimpleDialog(
         title: const Text("设置主题"),
         children: [
@@ -207,15 +208,15 @@ class AppStyleSettingController extends GetxController {
             },
             child: Column(
               children: [
-                RadioListTile<int>(
+                NativeRadioListTile<int>(
                   title: const Text("跟随系统"),
                   value: 0,
                 ),
-                RadioListTile<int>(
+                NativeRadioListTile<int>(
                   title: const Text("浅色模式"),
                   value: 1,
                 ),
-                RadioListTile<int>(
+                NativeRadioListTile<int>(
                   title: const Text("深色模式"),
                   value: 2,
                 ),

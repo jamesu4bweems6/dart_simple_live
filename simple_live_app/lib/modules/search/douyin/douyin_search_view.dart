@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
@@ -38,7 +39,7 @@ class DouyinSearchView extends StatelessWidget {
                       "暂不支持抖音搜索，请打开浏览器搜索，然后复制直播间链接进行解析",
                       textAlign: TextAlign.center,
                     ),
-                    TextButton.icon(
+                    NativeTextButton.icon(
                       onPressed: controller.openBrowser,
                       icon: const Icon(Icons.open_in_browser),
                       label: const Text("打开浏览器"),

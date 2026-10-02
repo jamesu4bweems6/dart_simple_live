@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -25,7 +27,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
               () => Column(
                 children: controller.notLogin.value
                     ? [
-                        ListTile(
+                        NativeListTile(
                           title: const Text("点击登录"),
                           leading: const Icon(Icons.login),
                           subtitle: const Text("登录后可以同步您的所有数据"),
@@ -36,7 +38,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
                         ),
                       ]
                     : [
-                        ListTile(
+                        NativeListTile(
                           title: const Text("已登录"),
                           leading: const Icon(Icons.cloud_circle_outlined),
                           subtitle: Text(controller.user.value),
@@ -47,7 +49,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
                         ),
                         AppStyle.divider,
                         Obx(
-                          () => ListTile(
+                          () => NativeListTile(
                             title: const Text("云端备份目录"),
                             leading: const Icon(Icons.drive_folder_upload),
                             subtitle: Text(controller.webDavBackupDirectory.value),
@@ -56,7 +58,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
                           ),
                         ),
                         AppStyle.divider,
-                        ListTile(
+                        NativeListTile(
                           title: const Text("上传到云端"),
                           subtitle: Text("上次上传：${controller.lastUploadTime}"),
                           leading: const Icon(Icons.cloud_upload_outlined),
@@ -66,14 +68,14 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
                           },
                         ),
                         AppStyle.divider,
-                        ListTile(
+                        NativeListTile(
                           title: const Text("恢复到本地"),
                           subtitle: Text("上次恢复：${controller.lastRecoverTime}"),
                           leading: const Icon(Icons.cloud_download_outlined),
                           trailing: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              IconButton(
+                              NativeIconButton(
                                 icon: const Icon(Icons.settings),
                                 onPressed: showSetting,
                               ),
@@ -86,7 +88,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
                           onLongPress: showSetting,
                         ),
                         AppStyle.divider,
-                        ListTile(
+                        NativeListTile(
                           title: const Text("双向同步数据"),
                           subtitle: Text("上次同步：${controller.lastRecoverTime}"),
                           leading: const Icon(Icons.cloud_sync_outlined),
@@ -114,7 +116,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
         children: [
           AppStyle.divider,
           Obx(
-            () => CheckboxListTile(
+            () => NativeCheckboxListTile(
               secondary: const Icon(Remix.heart_line),
               title: const Text("同步关注列表"),
               value: controller.isSyncFollows.value,
@@ -124,7 +126,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
           ),
           AppStyle.divider,
           Obx(
-            () => CheckboxListTile(
+            () => NativeCheckboxListTile(
               secondary: const Icon(Icons.history),
               title: const Text("同步播放历史记录"),
               value: controller.isSyncHistories.value,
@@ -134,7 +136,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
           ),
           AppStyle.divider,
           Obx(
-            () => CheckboxListTile(
+            () => NativeCheckboxListTile(
               secondary: const Icon(Remix.shield_keyhole_line),
               title: const Text("同步屏蔽字"),
               value: controller.isSyncBlockWord.value,
@@ -144,7 +146,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
           ),
           AppStyle.divider,
           Obx(
-            () => CheckboxListTile(
+            () => NativeCheckboxListTile(
               secondary: const Icon(Remix.account_circle_line),
               title: const Text("同步用户平台账号"),
               value: controller.isSyncAccount.value,
@@ -154,7 +156,7 @@ class RemoteSyncWebDAVPage extends GetView<RemoteSyncWebDAVController> {
           ),
           AppStyle.divider,
           Obx(
-            () => CheckboxListTile(
+            () => NativeCheckboxListTile(
               secondary: const Icon(Remix.user_settings_line),
               title: const Text("同步用户设置"),
               value: controller.isSyncSetting.value,

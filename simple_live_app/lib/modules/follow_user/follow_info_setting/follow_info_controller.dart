@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
@@ -118,7 +119,7 @@ class FollowInfoController extends BasePageController<FollowUser> {
       return;
     }
 
-    final confirmed = await Get.dialog<bool>(GlassAlertDialog(
+    final confirmed = await showGlassDialog<bool>(GlassAlertDialog(
       title: const Text('确认迁移'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -130,11 +131,11 @@ class FollowInfoController extends BasePageController<FollowUser> {
         ],
       ),
       actions: [
-        TextButton(
+        NativeTextButton(
           onPressed: () => Get.back(result: false),
           child: const Text('取消'),
         ),
-        TextButton(
+        NativeTextButton(
           onPressed: () => Get.back(result: true),
           child: const Text('确定'),
         ),

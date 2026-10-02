@@ -1,3 +1,7 @@
+import 'package:simple_live_app/widgets/native_ios/native_time_picker.dart';
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'dart:async';
 import 'dart:io';
 
@@ -781,7 +785,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
           child: Obx(
             () => SizedBox(
               width: 200,
-              child: Slider(
+              child: NativeSlider(
                 min: 0,
                 max: 100,
                 value: AppSettingsController.instance.playerVolume.value,
@@ -811,7 +815,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
           itemCount: qualites.length,
           itemBuilder: (_, i) {
             var item = qualites[i];
-            return RadioListTile(
+            return NativeRadioListTile(
               value: i,
               title: Text(item.quality),
             );
@@ -835,7 +839,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
         child: ListView.builder(
           itemCount: playUrls.length,
           itemBuilder: (_, i) {
-            return RadioListTile(
+            return NativeRadioListTile(
               value: i,
               title: Text("线路${i + 1}"),
               secondary: Text(
@@ -863,32 +867,32 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
               },
               child: Column(
                 children: [
-                  RadioListTile(
+                  NativeRadioListTile(
                     value: 0,
                     title: const Text("适应"),
                     visualDensity: VisualDensity.compact,
                   ),
-                  RadioListTile(
+                  NativeRadioListTile(
                     value: 1,
                     title: const Text("拉伸"),
                     visualDensity: VisualDensity.compact,
                   ),
-                  RadioListTile(
+                  NativeRadioListTile(
                     value: 2,
                     title: const Text("铺满"),
                     visualDensity: VisualDensity.compact,
                   ),
-                  RadioListTile(
+                  NativeRadioListTile(
                     value: 3,
                     title: const Text("16:9"),
                     visualDensity: VisualDensity.compact,
                   ),
-                  RadioListTile(
+                  NativeRadioListTile(
                     value: 4,
                     title: const Text("4:3"),
                     visualDensity: VisualDensity.compact,
                   ),
-                  RadioListTile(
+                  NativeRadioListTile(
                     value: 5,
                     title: Obx(() => Text(
                         "自定义（${AppSettingsController.instance.aspectWidth.value}:${AppSettingsController.instance.aspectHeight.value}）")),
@@ -917,7 +921,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
+                  child: NativeTextField(
                     controller: widthController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
@@ -930,7 +934,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
                 const Text("x", style: TextStyle(fontSize: 18)),
                 AppStyle.hGap12,
                 Expanded(
-                  child: TextField(
+                  child: NativeTextField(
                     controller: heightController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
@@ -942,7 +946,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
               ],
             ),
             AppStyle.vGap12,
-            TextButton(
+            NativeTextButton(
               onPressed: () {
                 final w = int.tryParse(widthController.text) ?? 16;
                 final h = int.tryParse(heightController.text) ?? 9;
@@ -979,13 +983,13 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
       child: ListView(
         padding: AppStyle.edgeInsetsA12,
         children: [
-          TextField(
+          NativeTextField(
             controller: keywordController,
             decoration: InputDecoration(
               contentPadding: AppStyle.edgeInsetsH12,
               border: const OutlineInputBorder(),
               hintText: "请输入${blockWords ? "关键词" : "用户名"}",
-              suffixIcon: TextButton.icon(
+              suffixIcon: NativeTextButton.icon(
                 onPressed: addKeyword,
                 icon: const Icon(Icons.add),
                 label: const Text("添加"),
@@ -1107,7 +1111,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
       child: ListView(
         children: [
           Obx(
-            () => SwitchListTile(
+            () => NativeSwitchListTile(
               title: Text(
                 "启用定时关闭",
                 style: Get.textTheme.titleMedium,
@@ -1122,7 +1126,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
             ),
           ),
           Obx(
-            () => ListTile(
+            () => NativeListTile(
               enabled: autoExitEnable.value,
               title: Text(
                 "自动关闭时间：${autoExitMinutes.value ~/ 60}小时${autoExitMinutes.value % 60}分钟",
@@ -1130,7 +1134,7 @@ class LiveRoomController extends PlayerController with WidgetsBindingObserver {
               ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () async {
-                var value = await showTimePicker(
+                var value = await showNativeTimePicker(
                   context: Get.context!,
                   initialTime: TimeOfDay(
                     hour: autoExitMinutes.value ~/ 60,

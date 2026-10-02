@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
@@ -96,7 +97,7 @@ class FollowUserPage extends GetView<FollowUserController> {
         ],
         leading: Obx(
           () => FollowService.instance.updating.value
-              ? const IconButton(
+              ? const NativeIconButton(
                   onPressed: null,
                   icon: SizedBox(
                     width: 16,
@@ -106,7 +107,7 @@ class FollowUserPage extends GetView<FollowUserController> {
                     ),
                   ),
                 )
-              : IconButton(
+              : NativeIconButton(
                   onPressed: () {
                     controller.refreshData();
                   },

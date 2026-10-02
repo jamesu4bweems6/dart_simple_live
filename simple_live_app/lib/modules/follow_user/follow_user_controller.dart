@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:simple_live_app/widgets/glass_dialog.dart';
 import 'package:simple_live_app/widgets/glass_sheet.dart';
 
@@ -198,7 +200,7 @@ class FollowUserController extends BasePageController<FollowUser> {
       builder: (_) => SafeArea(
         child: Wrap(
           children: [
-            ListTile(
+            NativeListTile(
               leading: const Icon(Remix.price_tag_3_line),
               title: const Text('设置标签'),
               onTap: () {
@@ -206,7 +208,7 @@ class FollowUserController extends BasePageController<FollowUser> {
                 setFollowTagDialog(item);
               },
             ),
-            ListTile(
+            NativeListTile(
               leading: const Icon(Remix.information_line),
               title: const Text('查看详情'),
               onTap: () {
@@ -228,7 +230,7 @@ class FollowUserController extends BasePageController<FollowUser> {
     ];
     Rx<FollowUserTag> checkTag = tagList.indexOf(filterMode.value) < 3 ? copiedList.first.obs : filterMode.value.obs;
     final ScrollController scrollController = ScrollController();
-    Get.dialog(
+    showGlassDialog(
       GlassAlertDialog(
         contentPadding: const EdgeInsets.all(16.0),
         shape: RoundedRectangleBorder(
@@ -247,7 +249,7 @@ class FollowUserController extends BasePageController<FollowUser> {
                     fontSize: 18,
                   ),
                 ),
-                IconButton(
+                NativeIconButton(
                   icon: const Icon(
                     Icons.check,
                   ),
@@ -290,7 +292,7 @@ class FollowUserController extends BasePageController<FollowUser> {
                               bottom: BorderSide(color: Colors.grey.shade300, width: 1.0),
                             ),
                           ),
-                          child: RadioListTile<FollowUserTag>(
+                          child: NativeRadioListTile<FollowUserTag>(
                             title: Text(tagItem.tag),
                             value: tagItem,
                           ),

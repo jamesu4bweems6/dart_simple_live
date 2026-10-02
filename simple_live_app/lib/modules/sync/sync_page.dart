@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -17,7 +19,7 @@ class SyncPage extends StatelessWidget {
         actions: [
           Visibility(
             visible: GetPlatform.isAndroid || GetPlatform.isIOS,
-            child: TextButton.icon(
+            child: NativeTextButton.icon(
               onPressed: () async {
                 var result = await Get.toNamed(RoutePath.kSyncScan);
                 if (result == null || result.isEmpty) {
@@ -48,7 +50,7 @@ class SyncPage extends StatelessWidget {
           SettingsCard(
             child: Column(
               children: [
-                ListTile(
+                NativeListTile(
                   title: const Text("WebDAV"),
                   leading: const Icon(Icons.cloud_upload_outlined),
                   subtitle: const Text("通过WebDAV同步数据"),
@@ -70,7 +72,7 @@ class SyncPage extends StatelessWidget {
           SettingsCard(
             child: Column(
               children: [
-                ListTile(
+                NativeListTile(
                   title: const Text("局域网同步"),
                   subtitle: const Text("在局域网内同步数据"),
                   leading: const Icon(Remix.device_line),

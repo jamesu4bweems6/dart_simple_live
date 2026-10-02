@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
@@ -28,7 +29,7 @@ class AccountController extends GetxController {
         children: [
           Visibility(
             visible: Platform.isAndroid || Platform.isIOS,
-            child: ListTile(
+            child: NativeListTile(
               leading: const Icon(Icons.account_circle_outlined),
               title: const Text("Web登录"),
               subtitle: const Text("填写用户名密码登录"),
@@ -39,7 +40,7 @@ class AccountController extends GetxController {
               },
             ),
           ),
-          ListTile(
+          NativeListTile(
             leading: const Icon(Icons.qr_code),
             title: const Text("扫码登录"),
             subtitle: const Text("使用哔哩哔哩APP扫描二维码登录"),
@@ -49,7 +50,7 @@ class AccountController extends GetxController {
               Get.toNamed(RoutePath.kBiliBiliQRLogin);
             },
           ),
-          ListTile(
+          NativeListTile(
             leading: const Icon(Icons.edit_outlined),
             title: const Text("Cookie登录"),
             subtitle: const Text("手动输入Cookie登录"),

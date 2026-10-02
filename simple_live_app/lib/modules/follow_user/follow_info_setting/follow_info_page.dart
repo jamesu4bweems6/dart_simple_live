@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -20,7 +23,7 @@ class FollowInfoPage extends GetView<FollowInfoController> {
         actions: [
           Obx(
             () => controller.pageLoadding.value
-                ? const IconButton(
+                ? const NativeIconButton(
                     onPressed: null,
                     icon: SizedBox(
                       width: 16,
@@ -30,7 +33,7 @@ class FollowInfoPage extends GetView<FollowInfoController> {
                       ),
                     ),
                   )
-                : IconButton(
+                : NativeIconButton(
                     onPressed: () {
                       controller.refreshData();
                     },
@@ -121,7 +124,7 @@ class FollowInfoPage extends GetView<FollowInfoController> {
           Padding(
             padding: AppStyle.edgeInsetsA12,
             child: Obx(() {
-              return ListTile(
+              return NativeListTile(
                 title: Text('备注设置', style: Theme.of(context).textTheme.bodyLarge),
                 visualDensity: VisualDensity.compact,
                 shape: RoundedRectangleBorder(
@@ -146,10 +149,10 @@ class FollowInfoPage extends GetView<FollowInfoController> {
                 ),
                 onTap: () {
                   final textController = TextEditingController(text: controller.followUser.value?.remark);
-                  Get.dialog(
+                  showGlassDialog(
                     GlassAlertDialog(
                       title: const Text("修改备注"),
-                      content: TextField(
+                      content: NativeTextField(
                         controller: textController,
                         decoration: const InputDecoration(border: OutlineInputBorder(), hintText: "请输入备注名"),
                         autofocus: true,
@@ -159,11 +162,11 @@ class FollowInfoPage extends GetView<FollowInfoController> {
                         },
                       ),
                       actions: [
-                        TextButton(
+                        NativeTextButton(
                           onPressed: () => Get.back(),
                           child: const Text("取消"),
                         ),
-                        TextButton(
+                        NativeTextButton(
                           onPressed: () {
                             controller.updateRemark(textController.text.trim());
                             Get.back();
@@ -195,7 +198,7 @@ class FollowInfoPage extends GetView<FollowInfoController> {
                 Row(
                   children: [
                     Expanded(
-                      child: TextField(
+                      child: NativeTextField(
                         controller: controller.migrationUrlController,
                         decoration: const InputDecoration(
                           hintText: '粘贴主播在新平台的直播间链接，如 https://... ',
@@ -210,12 +213,12 @@ class FollowInfoPage extends GetView<FollowInfoController> {
                       ),
                     ),
                     AppStyle.vGap8,
-                    IconButton(
+                    NativeIconButton(
                       tooltip: '粘贴',
                       onPressed: controller.pasteFromClipboard,
                       icon: const Icon(Remix.clipboard_line),
                     ),
-                    ElevatedButton.icon(
+                    NativeElevatedButton.icon(
                       onPressed: controller.parseAndMigrate,
                       icon: const Icon(Remix.arrow_right_line),
                       label: const Text('迁移'),

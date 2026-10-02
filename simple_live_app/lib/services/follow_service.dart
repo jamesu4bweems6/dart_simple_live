@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
@@ -656,10 +658,10 @@ class FollowService extends GetxService {
       return;
     }
     var content = generateJson();
-    Get.dialog(
+    showGlassDialog(
       GlassAlertDialog(
         title: const Text("导出为文本"),
-        content: TextField(
+        content: NativeTextField(
           controller: TextEditingController(text: content),
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
@@ -668,13 +670,13 @@ class FollowService extends GetxService {
           maxLines: 8,
         ),
         actions: [
-          TextButton(
+          NativeTextButton(
             onPressed: () {
               Get.back();
             },
             child: const Text("关闭"),
           ),
-          TextButton(
+          NativeTextButton(
             onPressed: () {
               Utils.copyToClipboard(content);
               Get.back();
@@ -688,10 +690,10 @@ class FollowService extends GetxService {
 
   void inputText() async {
     final TextEditingController textController = TextEditingController();
-    await Get.dialog(
+    await showGlassDialog(
       GlassAlertDialog(
         title: const Text("从文本导入"),
-        content: TextField(
+        content: NativeTextField(
           controller: textController,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
@@ -701,13 +703,13 @@ class FollowService extends GetxService {
           maxLines: 8,
         ),
         actions: [
-          TextButton(
+          NativeTextButton(
             onPressed: () {
               Get.back();
             },
             child: const Text("关闭"),
           ),
-          TextButton(
+          NativeTextButton(
             onPressed: () async {
               var content = await Utils.getClipboard();
               if (content != null) {
@@ -716,7 +718,7 @@ class FollowService extends GetxService {
             },
             child: const Text("粘贴"),
           ),
-          TextButton(
+          NativeTextButton(
             onPressed: () async {
               if (textController.text.isEmpty) {
                 SmartDialog.showToast("内容为空");

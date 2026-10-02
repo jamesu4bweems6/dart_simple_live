@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
@@ -52,7 +54,7 @@ class SettingsMenuCheck<T> extends StatelessWidget {
     final displayItemsCount = items.length;
     final displaySelectedCount = initialSelection.length;
 
-    return ListTile(
+    return NativeListTile(
       visualDensity: VisualDensity.compact,
       title: Text(
         title,
@@ -130,14 +132,14 @@ class SettingsMenuCheck<T> extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              ListTile(
+              NativeListTile(
                 contentPadding: const EdgeInsets.only(
                   left: 12,
                 ),
                 title: Text(
                   modalTitle?.tr ?? title.tr,
                 ),
-                trailing: IconButton(
+                trailing: NativeIconButton(
                   onPressed: () {
                     Get.back();
                     onConfirm?.call(controller.selectedItems.toList());
@@ -150,7 +152,7 @@ class SettingsMenuCheck<T> extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: items.map((item) {
-                      return Obx(() => CheckboxListTile(
+                      return Obx(() => NativeCheckboxListTile(
                             value: controller.selectedItems.contains(item),
                             controlAffinity: ListTileControlAffinity.leading,
                             title: Text(

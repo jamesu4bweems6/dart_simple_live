@@ -6,6 +6,13 @@ Format: Each version section starts with `## x.x.x`, followed by change lines st
 
 ---
 
+## 1.8.16
+
+- feat: iOS 导航、菜单、按钮、搜索、分段切换改用真实 UIKit 控件；iOS 26 按钮使用系统 glass / prominentGlass 配置
+- feat: 设置开关、步进器、滑块和输入框由 UIKit 处理，常用弹窗与选项表使用系统原生控制器
+- fix: 播放器原生玻璃按钮移除叠加玻璃底板；保留直播、弹幕、二维码与复杂内容的 Flutter 渲染
+- test: 增加原生导航菜单、输入同步、设置回调、sheet 返回结果与弹窗字段回归测试
+
 ## 1.8.15
 
 - feat: 全页面统一 iOS 26 液态玻璃风格，导航栏、弹窗和播放器控制层接入原生系统材质

@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -19,7 +20,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
         padding: AppStyle.edgeInsetsA12.copyWith(top: 0),
         children: [
           SettingsCard(
-            child: ListTile(
+            child: NativeListTile(
               leading: buildIcon(),
               title: Text(controller.info.name),
               subtitle: Text("${controller.info.type.toUpperCase()}   ${controller.info.address}"),
@@ -29,7 +30,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
           SettingsCard(
             child: Column(
               children: [
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.heart_line),
                   title: const Text("同步关注列表"),
                   trailing: const Icon(Icons.chevron_right),
@@ -38,7 +39,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Icons.history),
                   title: const Text("同步观看记录"),
                   trailing: const Icon(Icons.chevron_right),
@@ -47,7 +48,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.shield_keyhole_line),
                   title: const Text("同步弹幕屏蔽词"),
                   trailing: const Icon(Icons.chevron_right),
@@ -56,7 +57,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.account_circle_line),
                   title: const Text("同步哔哩哔哩账号"),
                   trailing: const Icon(Icons.chevron_right),
@@ -65,7 +66,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.account_circle_line),
                   title: const Text("同步斗鱼账号"),
                   trailing: const Icon(Icons.chevron_right),
@@ -74,7 +75,7 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
                   },
                 ),
                 AppStyle.divider,
-                ListTile(
+                NativeListTile(
                   leading: const Icon(Remix.tiktok_line),
                   title: const Text("同步抖音账号"),
                   trailing: const Icon(Icons.chevron_right),

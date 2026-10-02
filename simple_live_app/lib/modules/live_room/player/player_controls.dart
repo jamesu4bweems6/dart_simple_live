@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:canvas_danmaku/canvas_danmaku.dart';
@@ -117,6 +119,7 @@ Widget buildFullControls(
             duration:
                 MediaQuery.disableAnimationsOf(videoState.context) ? Duration.zero : const Duration(milliseconds: 200),
             child: LiquidGlassSurface(
+                nativeControls: true,
                 dark: true,
                 radius: 24,
                 child: Container(
@@ -128,7 +131,7 @@ Widget buildFullControls(
                   ),
                   child: Row(
                     children: [
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           if (controller.smallWindowState.value) {
                             controller.exitSmallWindow();
@@ -152,7 +155,7 @@ Widget buildFullControls(
                         ),
                       ),
                       AppStyle.hGap12,
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           controller.saveScreenshot();
                         },
@@ -162,7 +165,7 @@ Widget buildFullControls(
                           size: 24,
                         ),
                       ),
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           showFollowUser(controller);
                         },
@@ -174,7 +177,7 @@ Widget buildFullControls(
                       ),
                       Visibility(
                         visible: Platform.isAndroid,
-                        child: IconButton(
+                        child: NativeIconButton(
                           onPressed: () {
                             controller.enablePIP();
                           },
@@ -185,7 +188,7 @@ Widget buildFullControls(
                           ),
                         ),
                       ),
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           showPlayerSettings(controller);
                         },
@@ -211,6 +214,7 @@ Widget buildFullControls(
             duration:
                 MediaQuery.disableAnimationsOf(videoState.context) ? Duration.zero : const Duration(milliseconds: 200),
             child: LiquidGlassSurface(
+                nativeControls: true,
                 dark: true,
                 radius: 24,
                 child: Container(
@@ -221,7 +225,7 @@ Widget buildFullControls(
                   ),
                   child: Row(
                     children: [
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           controller.refreshRoom();
                         },
@@ -232,7 +236,7 @@ Widget buildFullControls(
                       ),
                       Offstage(
                         offstage: controller.showDanmakuState.value,
-                        child: IconButton(
+                        child: NativeIconButton(
                           onPressed: () => controller.showDanmakuState.value = !controller.showDanmakuState.value,
                           icon: const ImageIcon(
                             AssetImage('assets/icons/icon_danmaku_open.png'),
@@ -243,7 +247,7 @@ Widget buildFullControls(
                       ),
                       Offstage(
                         offstage: !controller.showDanmakuState.value,
-                        child: IconButton(
+                        child: NativeIconButton(
                           onPressed: () => controller.showDanmakuState.value = !controller.showDanmakuState.value,
                           icon: const ImageIcon(
                             AssetImage('assets/icons/icon_danmaku_close.png'),
@@ -252,7 +256,7 @@ Widget buildFullControls(
                           ),
                         ),
                       ),
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           showDanmakuSettings(controller);
                         },
@@ -265,7 +269,7 @@ Widget buildFullControls(
                       const Expanded(child: Center()),
                       Visibility(
                         visible: !Platform.isAndroid && !Platform.isIOS,
-                        child: IconButton(
+                        child: NativeIconButton(
                           key: volumeButtonKey,
                           onPressed: () {
                             controller.showVolumeSlider(volumeButtonKey.currentContext!);
@@ -277,7 +281,7 @@ Widget buildFullControls(
                           ),
                         ),
                       ),
-                      TextButton(
+                      NativeTextButton(
                         onPressed: () {
                           showQualitesInfo(controller);
                         },
@@ -288,7 +292,7 @@ Widget buildFullControls(
                           ),
                         ),
                       ),
-                      TextButton(
+                      NativeTextButton(
                         onPressed: () {
                           showLinesInfo(controller);
                         },
@@ -301,7 +305,7 @@ Widget buildFullControls(
                         // only pip
                         () => Visibility(
                           visible: controller.smallWindowState.value,
-                          child: IconButton(
+                          child: NativeIconButton(
                             onPressed: () {
                               controller.enterFullScreen();
                             },
@@ -312,7 +316,7 @@ Widget buildFullControls(
                           ),
                         ),
                       ),
-                      IconButton(
+                      NativeIconButton(
                         onPressed: () {
                           if (controller.smallWindowState.value) {
                             controller.exitSmallWindow();
@@ -358,6 +362,7 @@ Widget buildFullControls(
             offstage: !controller.showGestureTip.value,
             child: Center(
               child: LiquidGlassSurface(
+                nativeControls: true,
                 dark: true,
                 radius: 24,
                 padding: const EdgeInsets.all(16),
@@ -448,11 +453,12 @@ Widget buildControls(
           duration:
               MediaQuery.disableAnimationsOf(videoState.context) ? Duration.zero : const Duration(milliseconds: 200),
           child: LiquidGlassSurface(
+                nativeControls: true,
               dark: true,
               radius: 24,
               child: Row(
                 children: [
-                  IconButton(
+                  NativeIconButton(
                     onPressed: () {
                       controller.refreshRoom();
                     },
@@ -463,7 +469,7 @@ Widget buildControls(
                   ),
                   Offstage(
                     offstage: controller.showDanmakuState.value,
-                    child: IconButton(
+                    child: NativeIconButton(
                       onPressed: () => controller.showDanmakuState.value = !controller.showDanmakuState.value,
                       icon: const ImageIcon(
                         AssetImage('assets/icons/icon_danmaku_open.png'),
@@ -474,7 +480,7 @@ Widget buildControls(
                   ),
                   Offstage(
                     offstage: !controller.showDanmakuState.value,
-                    child: IconButton(
+                    child: NativeIconButton(
                       onPressed: () => controller.showDanmakuState.value = !controller.showDanmakuState.value,
                       icon: const ImageIcon(
                         AssetImage('assets/icons/icon_danmaku_close.png'),
@@ -483,7 +489,7 @@ Widget buildControls(
                       ),
                     ),
                   ),
-                  IconButton(
+                  NativeIconButton(
                     onPressed: () {
                       controller.showDanmuSettingsSheet();
                     },
@@ -496,7 +502,7 @@ Widget buildControls(
                   const Expanded(child: Center()),
                   Visibility(
                     visible: !Platform.isAndroid && !Platform.isIOS,
-                    child: IconButton(
+                    child: NativeIconButton(
                       key: volumeButtonKey,
                       onPressed: () {
                         controller.showVolumeSlider(
@@ -512,7 +518,7 @@ Widget buildControls(
                   ),
                   Offstage(
                     offstage: isPortrait,
-                    child: TextButton(
+                    child: NativeTextButton(
                       onPressed: () {
                         controller.showQualitySheet();
                       },
@@ -526,7 +532,7 @@ Widget buildControls(
                   ),
                   Offstage(
                     offstage: isPortrait,
-                    child: TextButton(
+                    child: NativeTextButton(
                       onPressed: () {
                         controller.showPlayUrlsSheet();
                       },
@@ -538,7 +544,7 @@ Widget buildControls(
                   ),
                   Visibility(
                     visible: !Platform.isAndroid && !Platform.isIOS,
-                    child: IconButton(
+                    child: NativeIconButton(
                       onPressed: () {
                         controller.enterSmallWindow();
                       },
@@ -549,7 +555,7 @@ Widget buildControls(
                       ),
                     ),
                   ),
-                  IconButton(
+                  NativeIconButton(
                     onPressed: () {
                       controller.enterFullScreen();
                     },
@@ -567,6 +573,7 @@ Widget buildControls(
           offstage: !controller.showGestureTip.value,
           child: Center(
             child: LiquidGlassSurface(
+                nativeControls: true,
               dark: true,
               radius: 24,
               padding: const EdgeInsets.all(16),
@@ -633,7 +640,7 @@ void showLinesInfo(LiveRoomController controller) {
       padding: EdgeInsets.zero,
       itemCount: controller.playUrls.length,
       itemBuilder: (_, i) {
-        return ListTile(
+        return NativeListTile(
           selected: controller.currentLineIndex == i,
           title: Text.rich(
             TextSpan(
@@ -686,7 +693,7 @@ void showQualitesInfo(LiveRoomController controller) {
       itemCount: controller.qualites.length,
       itemBuilder: (_, i) {
         var item = controller.qualites[i];
-        return ListTile(
+        return NativeListTile(
           selected: controller.currentQuality == i,
           title: Text(
             item.quality,
@@ -752,37 +759,37 @@ void showPlayerSettings(LiveRoomController controller) {
             },
             child: Column(
               children: [
-                RadioListTile(
+                NativeRadioListTile(
                   value: 0,
                   contentPadding: AppStyle.edgeInsetsH4,
                   title: const Text("适应"),
                   visualDensity: VisualDensity.compact,
                 ),
-                RadioListTile(
+                NativeRadioListTile(
                   value: 1,
                   contentPadding: AppStyle.edgeInsetsH4,
                   title: const Text("拉伸"),
                   visualDensity: VisualDensity.compact,
                 ),
-                RadioListTile(
+                NativeRadioListTile(
                   value: 2,
                   contentPadding: AppStyle.edgeInsetsH4,
                   title: const Text("铺满"),
                   visualDensity: VisualDensity.compact,
                 ),
-                RadioListTile(
+                NativeRadioListTile(
                   value: 3,
                   contentPadding: AppStyle.edgeInsetsH4,
                   title: const Text("16:9"),
                   visualDensity: VisualDensity.compact,
                 ),
-                RadioListTile(
+                NativeRadioListTile(
                   value: 4,
                   contentPadding: AppStyle.edgeInsetsH4,
                   title: const Text("4:3"),
                   visualDensity: VisualDensity.compact,
                 ),
-                RadioListTile(
+                NativeRadioListTile(
                   value: 5,
                   contentPadding: AppStyle.edgeInsetsH4,
                   title: Obx(() => Text(

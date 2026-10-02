@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
 import 'package:fractional_indexing_dart/fractional_indexing_dart.dart';
 import 'package:get/get.dart' hide Condition;
@@ -102,7 +105,7 @@ class FollowAppSettingsController extends BaseController {
       title: '标签管理',
       child: Column(mainAxisSize: MainAxisSize.min, crossAxisAlignment: CrossAxisAlignment.stretch, children: [
         AppStyle.divider,
-        ListTile(
+        NativeListTile(
           title: const Text("添加标签"),
           leading: const Icon(Icons.add),
           onTap: () {
@@ -119,7 +122,7 @@ class FollowAppSettingsController extends BaseController {
               itemBuilder: (context, index) {
                 // 偏移
                 FollowUserTag item = userTagList[index];
-                return ListTile(
+                return NativeListTile(
                   key: ValueKey(item.id),
                   title: GestureDetector(
                     child: Text(item.tag),
@@ -129,7 +132,7 @@ class FollowAppSettingsController extends BaseController {
                       }
                     },
                   ),
-                  leading: IconButton(
+                  leading: NativeIconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
                       removeTag(item);
@@ -157,7 +160,7 @@ class FollowAppSettingsController extends BaseController {
   void editTagDialog(String title, {FollowUserTag? followUserTag}) {
     final TextEditingController tagEditController = TextEditingController(text: followUserTag?.tag);
     bool upMode = title == "添加标签" ? true : false;
-    Get.dialog(
+    showGlassDialog(
       GlassAlertDialog(
         contentPadding: const EdgeInsets.fromLTRB(12, 12, 12, 4),
         shape: RoundedRectangleBorder(
@@ -176,7 +179,7 @@ class FollowAppSettingsController extends BaseController {
                   fontSize: 18,
                 ),
               ),
-              TextField(
+              NativeTextField(
                 controller: tagEditController,
                 minLines: 1,
                 maxLines: 1,
@@ -201,13 +204,13 @@ class FollowAppSettingsController extends BaseController {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    TextButton(
+                    NativeTextButton(
                       onPressed: () {
                         Get.back();
                       },
                       child: const Text('否'),
                     ),
-                    TextButton(
+                    NativeTextButton(
                       onPressed: () {
                         upMode
                             ? addTag(tagEditController.text)

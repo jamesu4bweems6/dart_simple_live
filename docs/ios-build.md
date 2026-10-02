@@ -6,7 +6,7 @@
 
 构建会安装项目指定的 Flutter SDK、Rust iOS 编译目标，运行关注列表和 Dock 触摸回归测试，再编译 iOS Release 应用。Dock 测试检查手机触摸不会被全局鼠标侧键手势截获，并验证原生选择事件能切换全部标签。无需配置 Android 密钥、Firebase Secrets 或 Apple 签名证书。
 
-iOS Dock 使用 UIKit 的 `UITabBarController`，在 iOS 26 及更新系统上由系统渲染 Liquid Glass；旧版 iOS 使用对应的原生标签栏。构建要求 iOS SDK 26 或更新版本。
+iOS 导航、按钮、搜索、分段切换和设置控件直接使用 UIKit；iOS 26 按钮采用系统 `glass()` / `prominentGlass()` 配置。常用弹窗与选项面板使用系统控制器，底部 Dock 使用 `UITabBarController`。构建要求 iOS SDK 26 或更新版本，工作流同时运行原生控件回调与路由回归测试。
 
 回归测试通过后直接构建并上传 Release IPA。构建流程已移除模拟器启动、预览编译和截图上传步骤。
 

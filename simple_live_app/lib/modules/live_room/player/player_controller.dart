@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'dart:async';
 import 'dart:io';
 import 'package:auto_orientation_v2/auto_orientation_v2.dart';
@@ -822,9 +823,9 @@ class PlayerController extends BaseController
       title: "播放信息",
       child: ListView(
         children: [
-          Obx(() => SwitchListTile(
+          Obx(() => NativeSwitchListTile(
               title: const Text("OSD 显示"), value: showOSDStats.value, onChanged: (value) => toggleOSDStats())),
-          ListTile(
+          NativeListTile(
             title: const Text("Resolution"),
             subtitle: Text('${player.state.width}x${player.state.height}'),
             onTap: () {
@@ -835,7 +836,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("VideoParams"),
             subtitle: Text(player.state.videoParams.toString()),
             onTap: () {
@@ -846,7 +847,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("AudioParams"),
             subtitle: Text(player.state.audioParams.toString()),
             onTap: () {
@@ -857,7 +858,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("Media"),
             subtitle: Text(player.state.playlist.toString()),
             onTap: () {
@@ -868,7 +869,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("AudioTrack"),
             subtitle: Text(player.state.track.audio.toString()),
             onTap: () {
@@ -879,7 +880,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("VideoTrack"),
             subtitle: Text(player.state.track.video.toString()),
             onTap: () {
@@ -890,7 +891,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("AudioBitrate"),
             subtitle: Text(player.state.audioBitrate.toString()),
             onTap: () {
@@ -901,7 +902,7 @@ class PlayerController extends BaseController
               );
             },
           ),
-          ListTile(
+          NativeListTile(
             title: const Text("Volume"),
             subtitle: Text(player.state.volume.toString()),
             onTap: () {

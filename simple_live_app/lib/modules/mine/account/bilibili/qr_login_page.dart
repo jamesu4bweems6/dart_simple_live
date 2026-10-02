@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -27,7 +28,7 @@ class BiliBiliQRLoginPage extends GetView<BiliBiliQRLoginController> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text("二维码加载失败"),
-                      TextButton(
+                      NativeTextButton(
                         onPressed: controller.loadQRCode,
                         child: const Text("重试"),
                       ),
@@ -39,7 +40,7 @@ class BiliBiliQRLoginPage extends GetView<BiliBiliQRLoginController> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       const Text("二维码已失效"),
-                      TextButton(
+                      NativeTextButton(
                         onPressed: controller.loadQRCode,
                         child: const Text("刷新二维码"),
                       ),

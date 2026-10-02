@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
 import 'package:material_ui/material_ui.dart';
 
 class NoneBorderCircularTextField extends StatelessWidget {
@@ -47,7 +48,7 @@ class NoneBorderCircularTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TextField common = TextField(
+    TextField common = NativeTextField(
       enabled: enable,
       readOnly: readOnly,
       decoration: InputDecoration(

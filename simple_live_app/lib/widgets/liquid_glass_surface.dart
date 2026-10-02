@@ -11,17 +11,25 @@ class LiquidGlassSurface extends StatelessWidget {
   final double radius;
   final EdgeInsetsGeometry padding;
   final bool dark;
+  final bool nativeControls;
 
   const LiquidGlassSurface({
     required this.child,
     this.radius = 28,
     this.padding = EdgeInsets.zero,
     this.dark = false,
+    this.nativeControls = false,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
+    // Native glass buttons already carry the system material. Do not stack a
+    // second glass pane behind the player's control group.
+    if (nativeControls && !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS) {
+      return Theme(data: Theme.of(context).copyWith(brightness: dark ? Brightness.dark : Theme.of(context).brightness),
+        child: Material(type: MaterialType.transparency, child: Padding(padding: padding, child: child)));
+    }
     final isDark = dark || Theme.of(context).brightness == Brightness.dark;
     final highContrast = MediaQuery.highContrastOf(context);
     final tint = isDark ? const Color(0xFF242428) : const Color(0xFFF9F9FC);

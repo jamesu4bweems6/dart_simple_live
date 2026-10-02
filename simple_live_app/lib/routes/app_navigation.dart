@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:material_ui/material_ui.dart';
@@ -32,7 +33,7 @@ class AppNavigator {
         "哔哩哔哩需要登录才能观看高清直播，是否前往登录？",
         title: "登录哔哩哔哩",
         actions: [
-          TextButton(
+          NativeTextButton(
             onPressed: () {
               AppSettingsController.instance.setBiliBiliLoginTip(false);
               Get.back(result: false);

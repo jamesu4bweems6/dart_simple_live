@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:easy_refresh/easy_refresh.dart';
@@ -66,7 +67,7 @@ class PageListView extends StatelessWidget {
                   !pageController.pageLoadding.value &&
                   !pageController.pageEmpty.value,
               child: Center(
-                child: TextButton(
+                child: NativeTextButton(
                   onPressed: pageController.loadData,
                   child: const Text("加载更多"),
                 ),
@@ -84,7 +85,7 @@ class PageListView extends StatelessWidget {
                   !pageController.pageEmpty.value &&
                   showPCRefreshButton,
               child: Center(
-                child: IconButton(
+                child: NativeIconButton(
                   style: IconButton.styleFrom(
                     backgroundColor: Get.theme.cardColor.withAlpha(200),
                     elevation: 4,

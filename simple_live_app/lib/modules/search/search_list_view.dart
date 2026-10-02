@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
 import 'package:material_ui/material_ui.dart';
 
 import 'package:get/get.dart';
@@ -45,7 +46,7 @@ class SearchListView extends StatelessWidget {
                 itemBuilder: (_, i) {
                   var item = controller.list[i] as LiveAnchorItem;
 
-                  return ListTile(
+                  return NativeListTile(
                     leading: NetImage(
                       item.avatar,
                       width: 48,

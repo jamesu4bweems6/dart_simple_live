@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -17,7 +19,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
       children: [
         Tooltip(
           message: "重置为默认字体",
-          child: IconButton(
+          child: NativeIconButton(
             onPressed: controller.fontReset,
             icon: Icon(Icons.settings_backup_restore_outlined),
           ),
@@ -27,7 +29,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
           visible: controller.fontState.value == DownloadState.downloaded,
           child: Tooltip(
             message: "删除字体",
-            child: IconButton(
+            child: NativeIconButton(
               onPressed: controller.fontDelete,
               icon: Icon(Icons.delete_outline_outlined),
             ),
@@ -68,7 +70,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    RadioListTile<int>(
+                    NativeRadioListTile<int>(
                       title: const Text(
                         "跟随系统",
                       ),
@@ -76,7 +78,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
                       value: 0,
                       contentPadding: AppStyle.edgeInsetsH12,
                     ),
-                    RadioListTile<int>(
+                    NativeRadioListTile<int>(
                       title: const Text(
                         "浅色模式",
                       ),
@@ -84,7 +86,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
                       value: 1,
                       contentPadding: AppStyle.edgeInsetsH12,
                     ),
-                    RadioListTile<int>(
+                    NativeRadioListTile<int>(
                       title: const Text(
                         "深色模式",
                       ),
@@ -193,7 +195,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
                       return trailingBuild(
                         widget: Tooltip(
                           message: "下载字体",
-                          child: IconButton(
+                          child: NativeIconButton(
                             icon: const Icon(Icons.download_outlined),
                             onPressed: () => controller.downloadFont(),
                           ),
@@ -212,7 +214,7 @@ class AppStyleSettingPage extends GetView<AppStyleSettingController> {
                       return trailingBuild(
                         widget: Tooltip(
                           message: "应用字体",
-                          child: IconButton(
+                          child: NativeIconButton(
                             icon: const Icon(Icons.check_circle_outline_outlined),
                             onPressed: () => controller.changeFontFamily(),
                           ),

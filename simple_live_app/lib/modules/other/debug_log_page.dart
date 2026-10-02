@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'dart:io';
 
 import 'package:get/get.dart';
@@ -17,7 +18,7 @@ class DebugLogPage extends StatelessWidget {
       appBar: GlassAppBar(
         title: const Text("Log"),
         actions: [
-          IconButton(
+          NativeIconButton(
             onPressed: () async {
               var msg = Log.debugLogs.map((x) => "${x.datetime}\r\n${x.content}").join('\r\n\r\n');
               var dir = await getApplicationDocumentsDirectory();
@@ -27,7 +28,7 @@ class DebugLogPage extends StatelessWidget {
             },
             icon: const Icon(Icons.save),
           ),
-          IconButton(
+          NativeIconButton(
             onPressed: () {
               Log.debugLogs.clear();
             },

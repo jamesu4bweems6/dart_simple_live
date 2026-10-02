@@ -1,3 +1,5 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
@@ -25,7 +27,7 @@ class ParsePage extends GetView<ParseController> {
               childrenPadding: AppStyle.edgeInsetsH12,
               initiallyExpanded: true,
               children: [
-                TextField(
+                NativeTextField(
                   minLines: 3,
                   maxLines: 3,
                   controller: controller.roomJumpToController,
@@ -45,7 +47,7 @@ class ParsePage extends GetView<ParseController> {
                 Container(
                   margin: AppStyle.edgeInsetsB4,
                   width: double.infinity,
-                  child: TextButton.icon(
+                  child: NativeTextButton.icon(
                     onPressed: () {
                       controller.jumpToRoom(controller.roomJumpToController.text);
                     },
@@ -63,7 +65,7 @@ class ParsePage extends GetView<ParseController> {
               childrenPadding: AppStyle.edgeInsetsH12,
               initiallyExpanded: true,
               children: [
-                TextField(
+                NativeTextField(
                   minLines: 3,
                   maxLines: 3,
                   controller: controller.getUrlController,
@@ -83,7 +85,7 @@ class ParsePage extends GetView<ParseController> {
                 Container(
                   margin: AppStyle.edgeInsetsB4,
                   width: double.infinity,
-                  child: TextButton.icon(
+                  child: NativeTextButton.icon(
                     onPressed: () {
                       controller.getPlayUrl(controller.getUrlController.text);
                     },

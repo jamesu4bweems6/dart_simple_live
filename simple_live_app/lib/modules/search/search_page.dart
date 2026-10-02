@@ -1,3 +1,6 @@
+import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
+import 'package:simple_live_app/widgets/native_ios/native_tabs.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/app_style.dart';
@@ -14,7 +17,7 @@ class SearchPage extends GetView<AppSearchController> {
     return Scaffold(
       appBar: GlassAppBar(
         automaticallyImplyLeading: false,
-        title: TextField(
+        title: NativeTextField(
           controller: controller.searchController,
           autofocus: true,
           decoration: InputDecoration(
@@ -26,7 +29,7 @@ class SearchPage extends GetView<AppSearchController> {
             prefixIcon: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
+                NativeIconButton(
                   onPressed: Get.back,
                   icon: const Icon(Icons.arrow_back),
                 ),
@@ -53,7 +56,7 @@ class SearchPage extends GetView<AppSearchController> {
                 AppStyle.hGap8,
               ],
             ),
-            suffixIcon: IconButton(
+            suffixIcon: NativeIconButton(
               onPressed: controller.doSearch,
               icon: const Icon(Icons.search),
             ),
@@ -62,7 +65,7 @@ class SearchPage extends GetView<AppSearchController> {
             controller.doSearch();
           },
         ),
-        bottom: TabBar(
+        bottom: NativeTabBar(
           controller: controller.tabController,
           padding: EdgeInsets.zero,
           tabAlignment: TabAlignment.center,

@@ -1,3 +1,4 @@
+import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
@@ -13,7 +14,7 @@ class BiliBiliWebLoginPage extends GetView<BiliBiliWebLoginController> {
       appBar: GlassAppBar(
         title: const Text("哔哩哔哩账号登录"),
         actions: [
-          TextButton.icon(
+          NativeTextButton.icon(
             onPressed: controller.toQRLogin,
             icon: const Icon(Icons.qr_code),
             label: const Text("二维码登录"),
