@@ -1,6 +1,7 @@
 import 'package:material_ui/material_ui.dart';
 import 'package:get/get.dart';
 import 'package:simple_live_app/app/app_style.dart';
+import 'package:simple_live_app/widgets/liquid_glass_dock.dart';
 
 import 'indexed_controller.dart';
 
@@ -11,7 +12,12 @@ class IndexedPage extends GetView<IndexedController> {
   Widget build(BuildContext context) {
     return OrientationBuilder(
       builder: (context, orientation) {
+        final showDock = orientation == Orientation.portrait;
+        final dockInset = showDock
+            ? LiquidGlassDock.height + LiquidGlassDock.verticalMargin * 2 + MediaQuery.of(context).padding.bottom
+            : 0.0;
         return Scaffold(
+          extendBody: showDock,
           body: Row(
             children: [
               Visibility(
@@ -46,34 +52,27 @@ class IndexedPage extends GetView<IndexedController> {
                             : BorderSide.none,
                       ),
                     ),
-                    child: IndexedStack(
-                      index: controller.index.value,
-                      children: controller.pages,
+                    child: DockContentInset(
+                      bottom: dockInset,
+                      child: IndexedStack(
+                        index: controller.index.value,
+                        children: controller.pages,
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
           ),
-          bottomNavigationBar: Visibility(
-            visible: orientation == Orientation.portrait,
-            child: Obx(
-              () => NavigationBar(
-                selectedIndex: controller.index.value,
-                onDestinationSelected: controller.setIndex,
-                height: 56,
-                labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
-                destinations: controller.items
-                    .map(
-                      (item) => NavigationDestination(
-                        icon: Icon(item.iconData),
-                        label: item.title,
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-          ),
+          bottomNavigationBar: showDock
+              ? Obx(
+                  () => LiquidGlassDock(
+                    items: controller.items.toList(),
+                    selectedIndex: controller.index.value,
+                    onSelected: controller.setIndex,
+                  ),
+                )
+              : null,
         );
       },
     );

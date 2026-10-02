@@ -6,6 +6,7 @@ import 'package:simple_live_app/app/app_style.dart';
 import 'package:simple_live_app/modules/category/category_list_controller.dart';
 import 'package:simple_live_app/routes/app_navigation.dart';
 import 'package:simple_live_app/widgets/keep_alive_wrapper.dart';
+import 'package:simple_live_app/widgets/liquid_glass_dock.dart';
 import 'package:simple_live_app/widgets/net_image.dart';
 import 'package:simple_live_app/widgets/shadow_card.dart';
 import 'package:simple_live_core/simple_live_core.dart';
@@ -27,7 +28,7 @@ class CategoryListView extends StatelessWidget {
             processedDuration: const Duration(milliseconds: 400),
           ),
           child: ListView.builder(
-            padding: AppStyle.edgeInsetsA12,
+            padding: AppStyle.edgeInsetsA12 + EdgeInsets.only(bottom: DockContentInset.bottomOf(context)),
             itemCount: controller.list.length,
             controller: controller.scrollController,
             itemBuilder: (_, i) {

@@ -1,0 +1,80 @@
+name: Build iOS IPA
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'codex/**'
+    paths:
+      - '.github/workflows/build_ios.yml'
+      - 'simple_live_app/**'
+      - 'simple_live_core/**'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        shell: bash
+        working-directory: simple_live_app
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v7
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: simple_live_app/pubspec.yaml
+          cache: true
+
+      - name: Set up Rust for iOS
+        run: |
+          rustup toolchain install stable --profile minimal --target aarch64-apple-ios
+          rustup default stable
+
+      - name: Restore Flutter dependencies
+        run: flutter pub get
+
+      - name: Run follow-list regression tests
+        run: flutter test test/follow_user_controller_test.dart
+
+      - name: Build unsigned iOS application
+        run: flutter build ios --release --no-codesign
+
+      - name: Package unsigned IPA
+        run: |
+          set -euo pipefail
+          test -d build/ios/iphoneos/Runner.app
+          mkdir -p build/ios/package/Payload
+          cp -R build/ios/iphoneos/Runner.app build/ios/package/Payload/Runner.app
+          cd build/ios/package
+          zip -q -r ../Slive-unsigned.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v7
+        with:
+          name: Slive-iOS-unsigned-${{ github.run_number }}
+          path: simple_live_app/build/ios/Slive-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
+
+      - name: Add download instructions
+        run: |
+          {
+            echo '### iOS build completed'
+            echo ''
+            echo 'Download the Slive-iOS-unsigned artifact from this workflow run.'
+            echo 'The IPA is unsigned and must be signed before installation on an iPhone.'
+            echo ''
+            echo "Source commit: $GITHUB_SHA"
+          } >> "$GITHUB_STEP_SUMMARY"

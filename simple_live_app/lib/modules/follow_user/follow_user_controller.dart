@@ -64,6 +64,8 @@ class FollowUserController extends BasePageController<FollowUser> {
     );
 
     sortMethod = AppSettingsController.instance.followSortMethod;
+    updateTagList();
+    filterData();
     super.onInit();
   }
 
@@ -71,7 +73,13 @@ class FollowUserController extends BasePageController<FollowUser> {
   Future refreshData() async {
     await FollowService.instance.loadData();
     updateTagList();
-    super.refreshData();
+    await super.refreshData();
+  }
+
+  @override
+  Future loadData() async {
+    await super.loadData();
+    filterData();
   }
 
   @override
@@ -79,16 +87,7 @@ class FollowUserController extends BasePageController<FollowUser> {
     if (page > 1) {
       return Future.value([]);
     }
-    if (filterMode.value.tag == "全部") {
-      return FollowService.instance.followList.value;
-    } else if (filterMode.value.tag == "直播中") {
-      return FollowService.instance.liveList.value;
-    } else if (filterMode.value.tag == "未开播") {
-      return FollowService.instance.notLiveList.value;
-    } else {
-      FollowService.instance.filterDataByTag(filterMode.value);
-      return FollowService.instance.curTagFollowList.value;
-    }
+    return _getFilteredData();
   }
 
   void updateTagList() {
@@ -101,24 +100,32 @@ class FollowUserController extends BasePageController<FollowUser> {
     }
   }
 
-  // 数据清洗：不关心中间 data_flow，最终由filterData决定显示数据
-  void filterData() {
+  List<FollowUser> _getFilteredData() {
     bool hideOffline = AppSettingsController.instance.hideOfflineFollow.value;
+    List<FollowUser> users;
 
     if (filterMode.value.tag == "全部") {
-      list.assignAll(FollowService.instance.followList.value);
+      users = FollowService.instance.followList.toList();
     } else if (filterMode.value.tag == "直播中") {
-      list.assignAll(FollowService.instance.liveList.value);
+      users = FollowService.instance.liveList.toList();
     } else if (filterMode.value.tag == "未开播") {
-      list.assignAll(FollowService.instance.notLiveList.value);
+      users = FollowService.instance.notLiveList.toList();
     } else {
       FollowService.instance.filterDataByTag(filterMode.value);
-      list.assignAll(FollowService.instance.curTagFollowList);
+      users = FollowService.instance.curTagFollowList.toList();
     }
 
     if (hideOffline && filterMode.value.tag != "未开播") {
-      list.retainWhere((user) => user.liveStatus.value == 2);
+      users.retainWhere((user) => user.liveStatus.value == 2);
     }
+    return users;
+  }
+
+  void filterData() {
+    // 页面列表必须持有独立副本，避免 assignAll 清空服务中的关注数据。
+    list.assignAll(_getFilteredData());
+    pageEmpty.value = list.isEmpty;
+    canLoadMore.value = false;
   }
 
   // 用户自定义关注样式

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/app/controller/base_controller.dart';
+import 'package:simple_live_app/widgets/liquid_glass_dock.dart';
 import 'package:simple_live_app/widgets/status/app_empty_widget.dart';
 import 'package:simple_live_app/widgets/status/app_error_widget.dart';
 import 'package:simple_live_app/widgets/status/app_loadding_widget.dart';
@@ -35,6 +36,10 @@ class PageGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final dockInset = DockContentInset.bottomOf(context);
+    final gridPadding = dockInset > 0
+        ? (padding ?? EdgeInsets.only(top: MediaQuery.of(context).padding.top)) + EdgeInsets.only(bottom: dockInset)
+        : padding;
     return Obx(
       () => Stack(
         children: [
@@ -51,7 +56,7 @@ class PageGridView extends StatelessWidget {
             onLoad: pageController.loadData,
             onRefresh: pageController.refreshData,
             child: MasonryGridView.count(
-              padding: padding,
+              padding: gridPadding,
               itemCount: pageController.list.length,
               itemBuilder: itemBuilder,
               crossAxisCount: crossAxisCount,

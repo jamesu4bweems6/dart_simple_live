@@ -8,6 +8,7 @@ import 'package:simple_live_app/app/log.dart';
 import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/routes/route_path.dart';
 import 'package:simple_live_app/services/signalr_service.dart';
+import 'package:simple_live_app/widgets/liquid_glass_dock.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class MinePage extends StatelessWidget {
@@ -24,8 +25,9 @@ class MinePage extends StatelessWidget {
               systemNavigationBarColor: Colors.transparent,
             ),
       child: SafeArea(
+        bottom: DockContentInset.bottomOf(context) == 0,
         child: ListView(
-          padding: AppStyle.edgeInsetsA4,
+          padding: AppStyle.edgeInsetsA4 + EdgeInsets.only(bottom: DockContentInset.bottomOf(context)),
           children: [
             AppStyle.vGap12,
             ListTile(

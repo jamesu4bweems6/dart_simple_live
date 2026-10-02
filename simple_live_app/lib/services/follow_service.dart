@@ -257,6 +257,7 @@ class FollowService extends GetxService {
     }
     liveListSort(); // 每次数据操作后外表进行业务刷新
     await DBService.instance.addFollow(follow);
+    _updatedListController.add(0);
   }
 
   // 取消关注（墓碑机制）
@@ -280,6 +281,7 @@ class FollowService extends GetxService {
     follow.deleted = true;
     follow.updateTime = DateTime.now().millisecondsSinceEpoch ~/ 1000;
     await DBService.instance.addFollow(follow);
+    _updatedListController.add(0);
   }
 
   // 判断关注是否存在
@@ -348,11 +350,9 @@ class FollowService extends GetxService {
       Log.i("FollowService: follow-snapshot has recovered, expireAt: ${followSnapshot.expireAt}");
     }
     followList.assignAll(list);
-    if (_snap) {
-      liveListSort();
-    }
     _buildDormantList();
     getAllTagList();
+    filterData();
   }
 
   /// 构建休眠用户列表
