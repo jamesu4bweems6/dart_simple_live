@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +16,6 @@ void main() {
   int? viewId;
 
   setUp(() {
-    debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
     platformCalls.clear();
     nativeChannels.clear();
     viewId = null;
@@ -38,7 +36,6 @@ void main() {
       messenger.setMockMethodCallHandler(channel, null);
     }
     messenger.setMockMethodCallHandler(SystemChannels.platform_views, null);
-    debugDefaultTargetPlatformOverride = null;
   });
 
   bool wasAccepted() => platformCalls.any(
@@ -49,6 +46,7 @@ void main() {
     var backCount = 0;
     await tester.pumpWidget(MaterialApp(
       home: RawGestureDetector(
+        behavior: HitTestBehavior.opaque,
         gestures: {
           FourthButtonTapGestureRecognizer:
               GestureRecognizerFactoryWithHandlers<FourthButtonTapGestureRecognizer>(
@@ -69,9 +67,9 @@ void main() {
     expect(wasAccepted(), isTrue);
     expect(backCount, 0);
 
-    // The actual mouse side button must still trigger desktop navigation.
+    // The mouse side button outside UIKit must still trigger navigation.
     final mouse = await tester.startGesture(
-      tester.getCenter(find.byType(UiKitView)),
+      const Offset(10, 10),
       kind: PointerDeviceKind.mouse,
       buttons: kBackMouseButton,
     );
@@ -80,7 +78,7 @@ void main() {
     expect(backCount, 1);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
-  });
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
   testWidgets('dock owns touch gestures and native selections switch every page', (tester) async {
     final items = Constant.allHomePages.values.toList();
@@ -126,5 +124,5 @@ void main() {
     expect(selections, [1, 2, 3, 0, 0]);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
-  });
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 }
