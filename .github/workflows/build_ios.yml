@@ -54,6 +54,9 @@ jobs:
       - name: Run follow-list regression tests
         run: flutter test test/follow_user_controller_test.dart
 
+      - name: Check native preview entry point
+        run: flutter analyze integration_test/native_dock_preview.dart --no-fatal-infos --no-fatal-warnings
+
       - name: Build unsigned iOS application
         run: flutter build ios --release --no-codesign
 

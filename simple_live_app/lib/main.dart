@@ -43,7 +43,7 @@ import 'package:simple_live_app/widgets/status/app_loadding_widget.dart';
 import 'package:simple_live_core/simple_live_core.dart';
 import 'package:window_manager/window_manager.dart';
 
-void main(List<String> arguments) async {
+Future<void> main(List<String> arguments) async {
   final action = arguments.isEmpty ? null : arguments.first.toLowerCase();
   var path = (await getApplicationSupportDirectory()).path;
   if (!Platform.isAndroid && !Platform.isIOS) {
