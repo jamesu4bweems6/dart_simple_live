@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:remixicon/remixicon.dart';
 
@@ -104,6 +105,10 @@ class _NativeControlState extends State<NativeControl> {
         },
       );
 }
+
+/// Unwraps an Obx so its current content can be described to UIKit. Callers
+/// rebuild inside their own Obx to keep the native control reactive.
+Widget? nativeResolve(Widget? widget) => widget is Obx ? nativeResolve(widget.builder()) : widget;
 
 String nativeText(Widget? widget) {
   if (widget is Text) return widget.data ?? widget.textSpan?.toPlainText() ?? '';

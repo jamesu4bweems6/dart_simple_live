@@ -8,6 +8,7 @@ import 'package:simple_live_app/widgets/glass_dialog.dart';
 import 'package:simple_live_app/widgets/glass_sheet.dart';
 import 'package:simple_live_app/widgets/native_ios/native_buttons.dart';
 import 'package:simple_live_app/widgets/native_ios/native_rows.dart';
+import 'package:simple_live_app/widgets/native_ios/native_tabs.dart';
 import 'package:simple_live_app/widgets/native_ios/native_text_field.dart';
 
 void main() {
@@ -98,6 +99,59 @@ void main() {
     expect(taps, 1);
     expect(selected, isTrue);
     expect(views[toggle.key]!['value'], isTrue);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('segmented tabs have a finite size inside a column like the live room', (tester) async {
+    final superChats = 0.obs;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: DefaultTabController(
+                length: 2,
+                child: Column(children: [
+                  NativeTabBar(tabs: [
+                    const Tab(text: '聊天'),
+                    Tab(child: Obx(() => Text(superChats.value > 0 ? 'SC(${superChats.value})' : 'SC'))),
+                  ]),
+                  const Expanded(child: TabBarView(children: [SizedBox(), SizedBox()])),
+                ])))));
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+    final segments = views.entries.singleWhere((entry) => entry.value['kind'] == 'segments');
+    expect(segments.value['titles'], ['聊天', 'SC']);
+    expect(tester.getSize(find.byType(UiKitView)).height, 32);
+    superChats.value = 2;
+    await tester.pump();
+    expect(views[segments.key]!['titles'], ['聊天', 'SC(2)']);
+    await event(segments.key, 'selected', 1);
+    await tester.pumpAndSettle();
+    expect(views[segments.key]!['selected'], 1);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('button with a reactive label shows and updates its UIKit title', (tester) async {
+    final quality = '原画'.obs;
+    var taps = 0;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Center(
+                child: NativeTextButton(
+                    onPressed: () => taps++,
+                    child: Obx(() => Text(quality.value, style: const TextStyle(color: Colors.white))))))));
+    await tester.pump();
+    final button = views.entries.singleWhere((entry) => entry.value['kind'] == 'button');
+    expect(button.value['title'], '原画');
+    expect(button.value['foreground'], Colors.white.toARGB32());
+    quality.value = '蓝光';
+    await tester.pump();
+    expect(views[button.key]!['title'], '蓝光');
+    expect(views.length, 1);
+    await event(button.key, 'tap', null);
+    expect(taps, 1);
     await tester.pumpWidget(const SizedBox.shrink());
     await tester.pump();
     expect(tester.takeException(), isNull);

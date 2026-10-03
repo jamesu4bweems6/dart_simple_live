@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:simple_live_app/widgets/native_ios/native_control.dart';
 
@@ -9,9 +10,25 @@ Widget nativeButton(BuildContext context,
     ButtonStyle? style,
     bool prominent = false,
     VoidCallback? onLongPress}) {
+  // A reactive label such as the player's quality button is an Obx. Describe
+  // its current content to UIKit and rebuild when the observed value changes.
+  if (child is Obx || icon is Obx) {
+    return Obx(() => nativeButton(context,
+        child: nativeResolve(child) ?? const SizedBox.shrink(),
+        onPressed: onPressed,
+        icon: nativeResolve(icon),
+        tooltip: tooltip,
+        style: style,
+        prominent: prominent,
+        onLongPress: onLongPress));
+  }
   final title = nativeText(child);
   final symbol = nativeSymbol(icon ?? child);
-  final foreground = style?.foregroundColor?.resolve({}) ?? (icon is Icon ? icon.color : null);
+  // Same precedence as Flutter: an explicit button style, then the icon or
+  // label's own color (e.g. white text on the dark player bar).
+  final foreground = style?.foregroundColor?.resolve({}) ??
+      (icon is Icon ? icon.color : null) ??
+      (child is Text ? child.style?.color : null);
   final fontSize = style?.textStyle?.resolve({})?.fontSize ?? 17;
   final textWidth = TextPainter(
       text: TextSpan(text: title, style: TextStyle(fontSize: fontSize)), textDirection: Directionality.of(context))
