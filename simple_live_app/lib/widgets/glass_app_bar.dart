@@ -33,6 +33,7 @@ bool _reactive(Widget? widget) {
   if (widget is Visibility) return _reactive(widget.child);
   if (widget is TextField) return _reactive(widget.decoration?.prefixIcon);
   if (widget is Row) return widget.children.any(_reactive);
+  if (widget is TabBar) return widget.tabs.any((tab) => _reactive(tab is Tab ? tab.child : tab));
   return false;
 }
 
@@ -110,8 +111,9 @@ class _NativeNavigationBarState extends State<_NativeNavigationBar> {
     final controller = tabs.controller ?? DefaultTabController.of(context);
     _listen(controller);
     return {
-      'titles':
-          tabs.tabs.map((tab) => tab is Tab ? tab.text ?? nativeText(_resolve(tab.child)) : nativeText(tab)).toList(),
+      'titles': tabs.tabs
+          .map((tab) => tab is Tab ? tab.text ?? nativeText(_resolve(tab.child)) : nativeText(_resolve(tab)))
+          .toList(),
       'selected': controller.index
     };
   }
@@ -129,7 +131,10 @@ class _NativeNavigationBarState extends State<_NativeNavigationBar> {
   @override
   Widget build(BuildContext context) {
     final bar = widget.bar;
-    return _reactive(bar.title) || _reactive(bar.leading) || (bar.actions ?? []).any(_reactive)
+    return _reactive(bar.title) ||
+            _reactive(bar.leading) ||
+            _reactive(bar.bottom) ||
+            (bar.actions ?? []).any(_reactive)
         ? Obx(() => _render(context))
         : _render(context);
   }

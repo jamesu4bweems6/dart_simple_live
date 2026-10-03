@@ -6,6 +6,14 @@ Format: Each version section starts with `## x.x.x`, followed by change lines st
 
 ---
 
+## 1.8.17
+
+- fix: 修复进入直播间时分段标签高度无约束导致 iOS 闪退；SC 计数等响应式标签标题正常显示并实时更新
+- fix: 保留原生控件触摸、表单输入辅助栏与弹窗内输入
+- fix: 播放器清晰度等响应式按钮标题正常显示；醒目按钮不再沿用为 Flutter 填充色设计的白色文字，修复 iOS 26 以下 WebDAV 登录按钮文字看不清
+- fix: 带图标的醒目按钮与导航栏内分段标签的响应式标题正常显示并实时更新
+- test: 增加直播间分段标签、响应式按钮与导航栏标签回归测试
+
 ## 1.8.16
 
 - feat: iOS 导航、菜单、按钮、搜索、分段切换改用真实 UIKit 控件；iOS 26 按钮使用系统 glass / prominentGlass 配置

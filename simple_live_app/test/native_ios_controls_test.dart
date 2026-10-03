@@ -157,6 +157,65 @@ void main() {
     expect(tester.takeException(), isNull);
   }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
 
+  testWidgets('prominent button keeps UIKit label color instead of white meant for a Flutter fill', (tester) async {
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Center(
+                child: NativeElevatedButton(
+                    onPressed: () {}, child: const Text('登录', style: TextStyle(color: Colors.white)))))));
+    await tester.pump();
+    final button = views.values.singleWhere((view) => view['kind'] == 'button');
+    expect(button['title'], '登录');
+    expect(button['prominent'], isTrue);
+    expect(button.containsKey('foreground'), isFalse);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('elevated icon button with a reactive label shows and updates its UIKit title', (tester) async {
+    final label = '最新'.obs;
+    await tester.pumpWidget(MaterialApp(
+        home: Scaffold(
+            body: Center(
+                child: NativeElevatedButton.icon(
+                    onPressed: () {}, icon: const Icon(Icons.expand_more), label: Obx(() => Text(label.value)))))));
+    await tester.pump();
+    final button = views.entries.singleWhere((entry) => entry.value['kind'] == 'button');
+    expect(button.value['title'], '最新');
+    expect(button.value['symbol'], 'chevron.down');
+    label.value = '3 条新消息';
+    await tester.pump();
+    expect(views[button.key]!['title'], '3 条新消息');
+    expect(views.length, 1);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
+  testWidgets('native navigation updates reactive tab titles in its bottom tabs', (tester) async {
+    final count = 0.obs;
+    await tester.pumpWidget(MaterialApp(
+        home: DefaultTabController(
+            length: 2,
+            child: Scaffold(
+                appBar: GlassAppBar(
+                    title: const Text('关注'),
+                    bottom: NativeTabBar(tabs: [
+                      const Tab(text: '全部'),
+                      Tab(child: Obx(() => Text('直播中(${count.value})'))),
+                    ]))))));
+    await tester.pump();
+    final id = views.keys.single;
+    expect(views[id]!['bottomTabs']['titles'], ['全部', '直播中(0)']);
+    count.value = 5;
+    await tester.pump();
+    expect(views[id]!['bottomTabs']['titles'], ['全部', '直播中(5)']);
+    await tester.pumpWidget(const SizedBox.shrink());
+    await tester.pump();
+    expect(tester.takeException(), isNull);
+  }, variant: TargetPlatformVariant.only(TargetPlatform.iOS));
+
   testWidgets('native navigation updates reactive title and dispatches menu actions', (tester) async {
     final title = '关注'.obs;
     var action = 0;

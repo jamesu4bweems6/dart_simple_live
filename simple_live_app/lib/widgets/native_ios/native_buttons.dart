@@ -24,11 +24,12 @@ Widget nativeButton(BuildContext context,
   }
   final title = nativeText(child);
   final symbol = nativeSymbol(icon ?? child);
-  // Same precedence as Flutter: an explicit button style, then the icon or
-  // label's own color (e.g. white text on the dark player bar).
+  // An explicit button style wins, then the icon or label's own color (e.g.
+  // white text on the dark player bar). A prominent button's content color is
+  // chosen against a Flutter fill that UIKit does not draw (white on primary
+  // would sit on the pale tinted capsule before iOS 26), so it is ignored.
   final foreground = style?.foregroundColor?.resolve({}) ??
-      (icon is Icon ? icon.color : null) ??
-      (child is Text ? child.style?.color : null);
+      (prominent ? null : (icon is Icon ? icon.color : null) ?? (child is Text ? child.style?.color : null));
   final fontSize = style?.textStyle?.resolve({})?.fontSize ?? 17;
   final textWidth = TextPainter(
       text: TextSpan(text: title, style: TextStyle(fontSize: fontSize)), textDirection: Directionality.of(context))
@@ -123,14 +124,28 @@ class NativeTextButton extends TextButton {
 }
 
 class NativeElevatedButton extends ElevatedButton {
-  const NativeElevatedButton({super.key, required super.onPressed, required super.child, super.style});
+  final Widget? nativeIcon;
+  final Widget nativeLabel;
+  const NativeElevatedButton({super.key, required super.onPressed, required Widget child, super.style})
+      : nativeIcon = null,
+        nativeLabel = child,
+        super(child: child);
   NativeElevatedButton.icon(
       {super.key, required super.onPressed, required Widget icon, required Widget label, super.style})
-      : super(child: Row(mainAxisSize: MainAxisSize.min, children: [icon, const SizedBox(width: 8), label]));
+      : nativeIcon = icon,
+        nativeLabel = label,
+        super(child: Row(mainAxisSize: MainAxisSize.min, children: [icon, const SizedBox(width: 8), label]));
   @override
   State<ButtonStyleButton> createState() => usesNativeIOS
-      ? NativeWidgetState<ButtonStyleButton>((context, button) => nativeButton(context,
-          child: button.child!, onPressed: button.onPressed, style: button.style, prominent: true))
+      ? NativeWidgetState<ButtonStyleButton>((context, button) {
+          final native = button as NativeElevatedButton;
+          return nativeButton(context,
+              child: native.nativeLabel,
+              icon: native.nativeIcon,
+              onPressed: native.onPressed,
+              style: native.style,
+              prominent: true);
+        })
       : super.createState();
 }
 
