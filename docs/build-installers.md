@@ -9,6 +9,8 @@
 
 文件保留 30 天。版本统一读取 `simple_live_app/pubspec.yaml`。此流程上传 Actions 构建产物，不创建 Release；现有 iOS IPA 工作流继续运行。
 
+`1.8.18+10818` 首次构建已完成：[运行与安装包下载](https://github.com/jamesu4bweems6/dart_simple_live/actions/runs/37569152476)。55 项回归测试、Windows 原生编译与 EXE/ZIP 打包、Android 四种 APK 编译与签名校验均通过。
+
 ## Android 固定签名
 
 仓库 Settings → Secrets and variables → Actions 需要两个加密 Secrets：
