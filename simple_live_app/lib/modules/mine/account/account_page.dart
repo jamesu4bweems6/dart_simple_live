@@ -6,6 +6,7 @@ import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/modules/mine/account/account_controller.dart';
 import 'package:simple_live_app/services/bilibili_account_service.dart';
 import 'package:simple_live_app/services/platform_service.dart';
+import 'package:simple_live_app/services/kuaishou_account_service.dart';
 import 'package:simple_live_app/widgets/glass_app_bar.dart';
 
 class AccountPage extends GetView<AccountController> {
@@ -81,6 +82,13 @@ class AccountPage extends GetView<AccountController> {
               },
             ),
           ),
+          Obx(() => NativeListTile(
+                leading: const Icon(Icons.account_circle_outlined),
+                title: const Text('快手账号（局域网同步）'),
+                subtitle: Text(KuaishouAccountService.instance.hasCookie.value ? '已配置' : '未配置'),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: controller.kuaishouTap,
+              )),
           Obx(
             () => NativeListTile(
               leading: Image.asset(

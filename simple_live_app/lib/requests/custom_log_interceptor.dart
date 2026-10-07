@@ -22,8 +22,8 @@ Request Method：${err.requestOptions.method}
 Response Code：${err.response?.statusCode}
 Request URL：${err.requestOptions.uri}
 Request Query：${err.requestOptions.queryParameters}
-Request Data：${err.requestOptions.data}
-Request Headers：${err.requestOptions.headers}
+Request Data：${_requestData(err.requestOptions)}
+Request Headers：${_maskHeader(err.requestOptions.headers)}
 Response Headers：${err.response?.headers.map}
 Response Data：${err.response?.data}''', err.stackTrace);
     } else {
@@ -34,7 +34,7 @@ Request Method：${err.requestOptions.method}
 Response Code：${err.response?.statusCode}
 Request URL：${err.requestOptions.uri}
 Request Query：${err.requestOptions.queryParameters}
-Request Data：${err.requestOptions.data}
+Request Data：${_requestData(err.requestOptions)}
 Request Headers：${_maskHeader(err.requestOptions.headers)}
 Response Headers：${err.response?.headers.map}
 Response Data：${err.response?.data}''', err.stackTrace);
@@ -53,8 +53,8 @@ Request Method：${response.requestOptions.method}
 Request Code：${response.statusCode}
 Request URL：${response.requestOptions.uri}
 Request Query：${response.requestOptions.queryParameters}
-Request Data：${response.requestOptions.data}
-Request Headers：${response.requestOptions.headers}
+Request Data：${_requestData(response.requestOptions)}
+Request Headers：${_maskHeader(response.requestOptions.headers)}
 Response Headers：${response.headers.map}
 Response Data：${response.data}''',
       );
@@ -65,6 +65,9 @@ Response Data：${response.data}''',
     }
     super.onResponse(response, handler);
   }
+
+  dynamic _requestData(RequestOptions options) =>
+      options.uri.path.startsWith('/sync/account/') ? '[account payload redacted]' : options.data;
 
   // Header脱敏
   String _maskHeader(Map<String, dynamic> header) {

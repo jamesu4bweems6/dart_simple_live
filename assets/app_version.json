@@ -1,7 +1,7 @@
 {
-    "version": "1.8.15",
-    "version_num": 10815,
-    "version_desc": "- feat: 全页面统一 iOS 26 液态玻璃风格，导航栏、弹窗和播放器控制层接入原生系统材质 \n- feat: 统一深浅色、分组卡片、输入框与按钮样式，兼容旧版 iOS 和其他平台 \n- test: 增加玻璃材质触摸穿透、主题切换、小屏布局及键盘避让回归测试",
+    "version": "1.8.18",
+    "version_num": 10818,
+    "version_desc": "- feat: 融合 v1.13.2-pre 的听直播模式、息屏后台播放和定时关闭修复，保留当前远程同步服务器 \n- fix: 斗鱼断流自动重新取流，减少伪下播；统一登录 Cookie 与播放签名设备身份 \n- perf: 高弹幕房间批量处理消息并限制队列容量，提升菜单与切房流畅度 \n- fix: 补齐局域网斗鱼、快手账号同步和凭据保存 \n- ci: 当前分支自动编译 Windows 安装程序、便携包和固定签名 Android APK，支持手动构建 \n- test: 新增听直播、定时关闭、断流恢复、局域网账号同步和斗鱼协议回归测试",
     "prerelease": false,
     "download_url": "https://github.com/SlotSun/dart_simple_live/releases"
 }

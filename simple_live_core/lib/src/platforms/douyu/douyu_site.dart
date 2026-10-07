@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:math';
 
 import 'package:html_unescape/html_unescape.dart';
+import 'package:simple_live_core/src/common/core_error.dart';
 import 'package:simple_live_core/simple_live_core.dart';
 import 'package:simple_live_core/src/common/http_client.dart';
 import 'package:simple_live_core/src/platforms/douyu/douyu_utils.dart';
@@ -82,7 +83,8 @@ class DouyuSite implements LiveSite {
   }
 
   @override
-  Future<List<LivePlayQuality>> getPlayQualites({required LiveRoomDetail detail}) async {
+  Future<List<LivePlayQuality>> getPlayQualites(
+      {required LiveRoomDetail detail}) async {
     var data = await DouyuUtils.sign(detail.roomId, cookie: _cookie);
     List<LivePlayQuality> qualities = [];
     var result = await HttpClient.instance.postJson(
@@ -92,6 +94,7 @@ class DouyuSite implements LiveSite {
       header: DouyuUtils.requestHeader(roomId: detail.roomId, cookie: _cookie),
     );
 
+    _validatePlaybackResponse(result, quality: true);
     var cdns = <String>[];
     for (var item in result["data"]["cdnsWithName"]) {
       cdns.add(item["cdn"].toString());
@@ -129,7 +132,7 @@ class DouyuSite implements LiveSite {
         // if expire=300 and cdn is ws then add &expire=0
         // user must be live in oversea
         // cookie is better, cookie needs refreshed every 7 days
-        if(url.contains('expire=300') && url.contains('fcdn=ws')){
+        if (url.contains('expire=300') && url.contains('fcdn=ws')) {
           url = '$url&expire=0';
         }
         urls.add(url);
@@ -139,7 +142,8 @@ class DouyuSite implements LiveSite {
   }
 
   Future<String> getPlayUrl(String roomId, int rate, String cdn) async {
-    var sign = await DouyuUtils.sign(roomId, rate: rate, cdn: cdn, cookie: _cookie);
+    var sign =
+        await DouyuUtils.sign(roomId, rate: rate, cdn: cdn, cookie: _cookie);
     var result = await HttpClient.instance.postJson(
       "https://www.douyu.com/lapi/live/getH5PlayV1/$roomId",
       data: sign,
@@ -147,7 +151,26 @@ class DouyuSite implements LiveSite {
       header: DouyuUtils.requestHeader(roomId: roomId, cookie: _cookie),
     );
 
+    _validatePlaybackResponse(result);
     return "${result["data"]["rtmp_url"]}/${HtmlUnescape().convert(result["data"]["rtmp_live"].toString())}";
+  }
+
+  void _validatePlaybackResponse(dynamic response, {bool quality = false}) {
+    if (response is! Map) throw CoreError('斗鱼返回了无效的播放响应');
+    final error = response['error'];
+    if (error != null && error.toString() != '0') {
+      throw CoreError('斗鱼播放请求失败：${response['msg'] ?? error}');
+    }
+    final data = response['data'];
+    if (data is! Map ||
+        (quality
+            ? data['cdnsWithName'] is! List || data['multirates'] is! List
+            : data['rtmp_url'] is! String ||
+                (data['rtmp_url'] as String).isEmpty ||
+                data['rtmp_live'] is! String ||
+                (data['rtmp_live'] as String).isEmpty)) {
+      throw CoreError('斗鱼返回了无效的播放数据');
+    }
   }
 
   @override
@@ -181,20 +204,20 @@ class DouyuSite implements LiveSite {
 
     return LiveRoomDetail(
       cover: roomInfo["room_pic"].toString(),
-      online: int.tryParse(roomInfo["room_biz_all"]["hot"].toString()) ?? 0,
+      online: int.tryParse((roomInfo["room_biz_all"]?["hot"]).toString()) ?? 0,
       roomId: roomInfo["room_id"].toString(),
       title: roomInfo["room_name"].toString(),
       userName: roomInfo["owner_name"].toString(),
       userAvatar: roomInfo["owner_avatar"].toString(),
       introduction: roomInfo["show_details"].toString(),
       notice: "",
-      status: roomInfo["show_status"] == 1 &&
-          roomInfo["videoLoop"] != 1 &&
-          !roomInfo["room_name"].startsWith("【回放】"),
+      status: roomInfo["show_status"].toString() == "1" &&
+          roomInfo["videoLoop"].toString() != "1" &&
+          !roomInfo["room_name"].toString().startsWith("【回放】"),
       danmakuData: roomInfo["room_id"].toString(),
       data: "",
       url: "https://www.douyu.com/$roomId",
-      isRecord: roomInfo["videoLoop"] == 1,
+      isRecord: roomInfo["videoLoop"].toString() == "1",
     );
   }
 
@@ -235,32 +258,22 @@ class DouyuSite implements LiveSite {
   }
 
   Future<Map> _getRoomInfo(String roomId) async {
-    var result = await HttpClient.instance.getJson(
-        "https://www.douyu.com/betard/$roomId",
-        queryParameters: {},
-        header: {
-          'referer': 'https://www.douyu.com/$roomId',
-          'user-agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.43',
-        });
-    Map roomInfo;
-    if (result is String) {
-      roomInfo = json.decode(result)["room"];
-    } else {
-      roomInfo = result["room"];
+    final result = await HttpClient.instance.getJson(
+      'https://www.douyu.com/betard/$roomId',
+      header: DouyuUtils.requestHeader(roomId: roomId, cookie: _cookie),
+    );
+    final decoded = result is String ? json.decode(result) : result;
+    final room = decoded is Map ? decoded['room'] : null;
+    if (room is! Map || room['show_status'] == null) {
+      throw CoreError('斗鱼返回了无效的房间信息');
     }
-    return roomInfo;
+    return room;
   }
 
-  //生成指定长度的16进制随机字符串
   String generateRandomString(int length) {
-    var random = Random.secure();
-    var values = List<int>.generate(length, (i) => random.nextInt(16));
-    StringBuffer stringBuffer = StringBuffer();
-    for (var item in values) {
-      stringBuffer.write(item.toRadixString(16));
-    }
-    return stringBuffer.toString();
+    final random = Random.secure();
+    return List.generate(length, (_) => random.nextInt(16).toRadixString(16))
+        .join();
   }
 
   @override
@@ -304,9 +317,9 @@ class DouyuSite implements LiveSite {
   @override
   Future<bool> getLiveStatus({required String roomId}) async {
     var roomInfo = await _getRoomInfo(roomId);
-    return roomInfo["show_status"] == 1 &&
-        roomInfo["videoLoop"] != 1 &&
-        !roomInfo["room_name"].startsWith("【回放】");
+    return roomInfo["show_status"].toString() == "1" &&
+        roomInfo["videoLoop"].toString() != "1" &&
+        !roomInfo["room_name"].toString().startsWith("【回放】");
   }
 
   int parseHotNum(String hn) {
@@ -329,14 +342,15 @@ class DouyuSite implements LiveSite {
   }
 
   Future<String> refreshCookie(String dy_did, String ltp0) async {
-    var newCookie = await DouyuUtils.refreshCookie(did: dy_did, ltp0: ltp0, cookie: _cookie);
+    var newCookie = await DouyuUtils.refreshCookie(
+        did: dy_did, ltp0: ltp0, cookie: _cookie);
     _cookie = newCookie;
     return newCookie;
   }
 
   @override
   Future<void> setSiteAttrs(Map<String, dynamic> data) async {
-    if(data.containsKey('cookie')){
+    if (data.containsKey('cookie')) {
       _cookie = data['cookie'] as String;
     }
   }

@@ -258,19 +258,30 @@ class LiveRoomPage extends GetView<LiveRoomController> {
     }
     return Stack(
       children: [
-        Video(
-          key: controller.globalPlayerKey,
-          controller: controller.videoController,
-          pauseUponEnteringBackgroundMode: AppSettingsController.instance.playerAutoPause.value,
-          resumeUponEnteringForegroundMode: AppSettingsController.instance.playerAutoPause.value,
-          controls: (state) {
-            return playerControls(state, controller);
-          },
-          aspectRatio: aspectRatio,
-          fit: boxFit,
-          // 自己实现
-          wakelock: false,
-        ),
+        Obx(() => Video(
+              key: controller.globalPlayerKey,
+              controller: controller.videoController,
+              pauseUponEnteringBackgroundMode:
+                  !controller.listeningMode.value && AppSettingsController.instance.playerAutoPause.value,
+              resumeUponEnteringForegroundMode:
+                  !controller.listeningMode.value && AppSettingsController.instance.playerAutoPause.value,
+              controls: (state) {
+                return playerControls(state, controller);
+              },
+              aspectRatio: aspectRatio,
+              fit: boxFit,
+              // 自己实现
+              wakelock: false,
+            )),
+        Obx(() => controller.listeningMode.value
+            ? const IgnorePointer(
+                child: Center(
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
+                Icon(Icons.headphones, size: 40, color: Colors.white),
+                SizedBox(height: 8),
+                Text('正在听直播', style: TextStyle(color: Colors.white)),
+              ])))
+            : const SizedBox.shrink()),
         Obx(
           () => Visibility(
             visible: !controller.liveStatus.value,
@@ -693,6 +704,8 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 onTap: controller.showDanmuSettingsSheet,
               ),
               AppStyle.divider,
+              if (Platform.isAndroid || Platform.isIOS)
+                SettingsAction(title: "听直播", onTap: controller.showListeningSheet),
               SettingsAction(
                 title: "定时关闭",
                 onTap: controller.showAutoExitSheet,
@@ -835,6 +848,16 @@ class LiveRoomPage extends GetView<LiveRoomController> {
                 },
               ),
             ),
+            if (Platform.isAndroid || Platform.isIOS)
+              NativeListTile(
+                leading: const Icon(Icons.headphones),
+                title: const Text("听直播"),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () {
+                  Get.back();
+                  controller.showListeningSheet();
+                },
+              ),
             NativeListTile(
               leading: const Icon(Icons.timer_outlined),
               title: const Text("定时关闭"),

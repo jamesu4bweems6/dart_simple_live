@@ -156,6 +156,9 @@ class LocalStorageService extends GetxService {
   static const String kDouyinCookie = "DouyinCookie";
 
   /// 斗鱼cookie
+  static const String kKuaishouCookie = 'KuaishouCookie';
+  static const String kKuaishouKww = 'KuaishouKww';
+  static const String kKuaishouCookieExpiresAt = 'KuaishouCookieExpiresAt';
   static const String kDouyuCookie = "DouyuCookie";
 
   /// 斗鱼dy_did
@@ -288,10 +291,22 @@ class LocalStorageService extends GetxService {
     );
   }
 
+  Object? _logValue(dynamic key, Object? value) => {
+        kBilibiliCookie,
+        kDouyinCookie,
+        kDouyuCookie,
+        kDouyuLTP0,
+        kKuaishouCookie,
+        kKuaishouKww,
+        kWebDAVPassword,
+      }.contains(key)
+          ? '[redacted]'
+          : value;
+
   T getValue<T>(dynamic key, T defaultValue) {
     try {
       var value = settingsBox.get(key, defaultValue: defaultValue) as T;
-      Log.d("Get LocalStorage：$key\r\n$value");
+      Log.d("Get LocalStorage：$key\r\n${_logValue(key, value)}");
       return value;
     } catch (e) {
       Log.logPrint(e);
@@ -302,7 +317,7 @@ class LocalStorageService extends GetxService {
   T? getNullValue<T>(dynamic key, T? defaultValue) {
     try {
       var value = settingsBox.get(key, defaultValue: defaultValue) as T?;
-      Log.d("Get LocalStorage：$key\r\n$value");
+      Log.d("Get LocalStorage：$key\r\n${_logValue(key, value)}");
       return value;
     } catch (e) {
       Log.logPrint(e);
@@ -311,7 +326,7 @@ class LocalStorageService extends GetxService {
   }
 
   Future setValue<T>(dynamic key, T value) async {
-    Log.d("Set LocalStorage：$key\r\n$value");
+    Log.d("Set LocalStorage：$key\r\n${_logValue(key, value)}");
     return await settingsBox.put(key, value);
   }
 

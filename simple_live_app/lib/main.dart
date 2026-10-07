@@ -37,6 +37,7 @@ import 'package:simple_live_app/services/history_service.dart';
 import 'package:simple_live_app/services/local_storage_service.dart';
 import 'package:simple_live_app/services/migration_service.dart';
 import 'package:simple_live_app/services/platform_service.dart';
+import 'package:simple_live_app/services/kuaishou_account_service.dart';
 import 'package:simple_live_app/services/sync_service.dart';
 import 'package:simple_live_app/services/window_service.dart';
 import 'package:simple_live_app/src/rust/frb_generated.dart';
@@ -118,6 +119,7 @@ Future initServices() async {
   Get.put(BiliBiliAccountService());
 
   Get.put(PlatformService());
+  Get.put(KuaishouAccountService());
 
   Get.put(SyncService());
 

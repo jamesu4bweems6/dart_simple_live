@@ -16,6 +16,7 @@ import 'package:simple_live_app/models/db/history.dart';
 import 'package:simple_live_app/services/bilibili_account_service.dart';
 import 'package:simple_live_app/services/db_service.dart';
 import 'package:simple_live_app/services/platform_service.dart';
+import 'package:simple_live_app/services/kuaishou_account_service.dart';
 import 'package:udp/udp.dart';
 import 'package:shelf/shelf.dart' as shelf;
 import 'package:shelf/shelf_io.dart' as shelf_io;
@@ -183,35 +184,42 @@ class SyncService extends GetxService {
     return ip ?? "";
   }
 
+  Router createRouter() {
+    final serverRouter = Router();
+    serverRouter.get('/', _helloRequest);
+    serverRouter.get('/info', _infoRequest);
+    serverRouter.post('/sync/follow', _syncFollowUserReuqest);
+    serverRouter.post('/sync/tag', _syncFollowUserTagRequest);
+    serverRouter.post('/sync/history', _syncHistoryReuqest);
+    serverRouter.post('/sync/blocked_word', _syncBlockedWordReuqest);
+    serverRouter.post('/sync/account/bilibili', _syncBiliAccountReuqest);
+    serverRouter.post('/sync/account/douyu', _syncDouyuAccountRequest);
+    serverRouter.post('/sync/account/douyin', _syncDouyinAccountRequest);
+
+    serverRouter.post('/sync/account/kuaishou', _syncKuaishouAccountRequest);
+    return serverRouter;
+  }
+
   /// 初始化HTTP服务
   void initServer() async {
     try {
-      var serverRouter = Router();
-      serverRouter.get('/', _helloRequest);
-      serverRouter.get('/info', _infoRequest);
-      serverRouter.post('/sync/follow', _syncFollowUserReuqest);
-      serverRouter.post('/sync/tag', _syncFollowUserTagRequest);
-      serverRouter.post('/sync/history', _syncHistoryReuqest);
-      serverRouter.post('/sync/blocked_word', _syncBlockedWordReuqest);
-      serverRouter.post('/sync/account/bilibili', _syncBiliAccountReuqest);
-      serverRouter.post('/sync/account/douyu', _syncDouyuAccountRequest);
-      serverRouter.post('/sync/account/douyin', _syncDouyinAccountRequest);
+      final serverRouter = createRouter();
 
-      var server = await shelf_io.serve(
+      server = await shelf_io.serve(
         serverRouter.call,
         InternetAddress.anyIPv4,
         httpPort,
       );
 
       // Enable content compression
-      server.autoCompress = true;
+      server!.autoCompress = true;
 
       httpRunning.value = true;
 
       var ip = await getLocalIP();
       ipAddress.value = ip;
 
-      Log.d('Serving at http://$ip:${server.port}');
+      Log.d('Serving at http://$ip:${server!.port}');
     } catch (e) {
       httpErrorMsg.value = e.toString();
       Log.logPrint(e);
@@ -366,7 +374,6 @@ class SyncService extends GetxService {
   Future<shelf.Response> _syncBiliAccountReuqest(shelf.Request request) async {
     try {
       var body = await request.readAsString();
-      Log.d('_syncBiliAccountReuqest: $body');
       var jsonBody = json.decode(body);
       var cookie = jsonBody['cookie'];
       BiliBiliAccountService.instance.setCookie(cookie);
@@ -388,14 +395,12 @@ class SyncService extends GetxService {
   Future<shelf.Response> _syncDouyuAccountRequest(shelf.Request request) async {
     try {
       var body = await request.readAsString();
-      Log.d('_syncDouyuAccountRequest: $body');
-      var jsonBody = json.decode(body);
-      // 和 client data 保持一致
-      var cookie = jsonBody['cookie'];
-      var did = jsonBody['dy_did'];
-      var ltp0 = jsonBody['ltp0'];
-      PlatformService.instance.setDouyuCookie(cookie);
-      PlatformService.instance.setDouyuDidAndLtp0(did,ltp0);
+      final jsonBody = json.decode(body);
+      if (jsonBody is! Map || jsonBody['cookie'] is! String) {
+        throw const FormatException('账号数据格式错误');
+      }
+      await PlatformService.instance.importDouyuAccount(jsonBody['cookie'] as String,
+          did: jsonBody['dy_did'] as String?, ltp0: jsonBody['ltp0'] as String?);
       SmartDialog.showToast('已同步斗鱼账号');
       return toJsonResponse({
         'status': true,
@@ -408,11 +413,11 @@ class SyncService extends GetxService {
       });
     }
   }
+
   /// 同步抖音账号
   Future<shelf.Response> _syncDouyinAccountRequest(shelf.Request request) async {
     try {
       var body = await request.readAsString();
-      Log.d('_syncDouyinAccountRequest: $body');
       var jsonBody = json.decode(body);
       var cookie = jsonBody['cookie'];
       PlatformService.instance.setDouyinCookie(cookie);
@@ -426,6 +431,25 @@ class SyncService extends GetxService {
         'status': false,
         'message': e.toString(),
       });
+    }
+  }
+
+  Future<shelf.Response> _syncKuaishouAccountRequest(shelf.Request request) async {
+    try {
+      final data = json.decode(await request.readAsString());
+      if (data is! Map || data['cookie'] is! String || (data['cookie'] as String).trim().isEmpty) {
+        throw const FormatException('快手账号 Cookie 为空或格式错误');
+      }
+      final expiry = data['cookieExpiresAt'];
+      if (expiry != null && expiry is! num) throw const FormatException('Cookie 到期时间格式错误');
+      final expiresAt = (expiry as num?)?.toInt() ?? 0;
+      await KuaishouAccountService.instance.setCookie(data['cookie'] as String,
+          kww: data['kww'] as String? ?? '',
+          expiresAt: expiresAt > 0 ? DateTime.fromMillisecondsSinceEpoch(expiresAt) : null);
+      SmartDialog.showToast('已同步快手账号');
+      return toJsonResponse({'status': true, 'message': 'success'});
+    } catch (e) {
+      return toJsonResponse({'status': false, 'message': e.toString()});
     }
   }
 

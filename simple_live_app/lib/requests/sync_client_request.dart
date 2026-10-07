@@ -143,4 +143,13 @@ class SyncClientRequest {
       throw data["message"];
     }
   }
+
+  Future<bool> syncKuaishouAccount(SyncClinet client, String cookie, {String kww = '', int cookieExpiresAt = 0}) async {
+    final data = await HttpClient.instance.postJson(
+      'http://${client.address}:${client.port}/sync/account/kuaishou',
+      data: {'cookie': cookie, 'kww': kww, 'cookieExpiresAt': cookieExpiresAt},
+    );
+    if (data['status'] == true) return true;
+    throw data['message'] ?? '同步失败';
+  }
 }

@@ -76,6 +76,13 @@ class SyncDevicePage extends GetView<SyncDeviceController> {
                 ),
                 AppStyle.divider,
                 NativeListTile(
+                  leading: const Icon(Remix.account_circle_line),
+                  title: const Text("同步快手账号"),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: controller.syncKuaishouAccount,
+                ),
+                AppStyle.divider,
+                NativeListTile(
                   leading: const Icon(Remix.tiktok_line),
                   title: const Text("同步抖音账号"),
                   trailing: const Icon(Icons.chevron_right),

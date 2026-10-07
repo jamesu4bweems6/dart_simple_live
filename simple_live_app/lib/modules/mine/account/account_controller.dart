@@ -7,6 +7,7 @@ import 'package:simple_live_app/app/utils.dart';
 import 'package:simple_live_app/routes/route_path.dart';
 import 'package:simple_live_app/services/bilibili_account_service.dart';
 import 'package:simple_live_app/services/platform_service.dart';
+import 'package:simple_live_app/services/kuaishou_account_service.dart';
 
 class AccountController extends GetxController {
   void bilibiliTap() async {
@@ -127,11 +128,29 @@ class AccountController extends GetxController {
         ),
       ], title: '请输入斗鱼各项参数');
       if (douyuParams == null || douyuParams.isEmpty) return;
-      var dyCookie = douyuParams['cookie']??'';
-      var dyDid = douyuParams['dy_did']??'';
-      var dyLtp0 = douyuParams['ltp0']??'';
-      PlatformService.instance.setDouyuCookie(dyCookie);
-      await PlatformService.instance.setDouyuDidAndLtp0(dyDid, dyLtp0);
+      var dyCookie = douyuParams['cookie'] ?? '';
+      var dyDid = douyuParams['dy_did'] ?? '';
+      var dyLtp0 = douyuParams['ltp0'] ?? '';
+      if (dyCookie.trim().isNotEmpty) {
+        await PlatformService.instance.importDouyuAccount(dyCookie, did: dyDid, ltp0: dyLtp0);
+      } else {
+        await PlatformService.instance.setDouyuDidAndLtp0(dyDid, dyLtp0);
+      }
     }
+  }
+
+  void kuaishouTap() async {
+    final account = KuaishouAccountService.instance;
+    final values = await Utils.showEditTextsDialog([
+      TextEditItem(value: account.cookie, label: 'Cookie', hintText: '快手网页登录 Cookie', key: 'cookie'),
+      TextEditItem(value: account.kww, label: 'kwfv1', hintText: '可选', key: 'kww'),
+    ], title: '快手账号（局域网同步）');
+    if (values == null) return;
+    final cookie = values['cookie']?.trim() ?? '';
+    if (cookie.isEmpty) {
+      account.clearCookie();
+      return;
+    }
+    await account.setCookie(cookie, kww: values['kww'] ?? '');
   }
 }

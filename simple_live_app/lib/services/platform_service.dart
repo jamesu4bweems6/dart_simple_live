@@ -25,8 +25,8 @@ class PlatformService extends GetxService {
 
   void _initDouyin() {
     douyinHlsFirst = LocalStorageService.instance.getValue(LocalStorageService.kDouyinHlsFirst, false);
-    _updateDouyinAttr();
     douyinCookie = LocalStorageService.instance.getValue(LocalStorageService.kDouyinCookie, "");
+    _updateDouyinAttr();
     douyinLogined.value = douyinCookie.isNotEmpty;
     loadDouyinUserInfo();
   }
@@ -58,7 +58,7 @@ class PlatformService extends GetxService {
   }
 
   void setDouyinCookie(String cookie) {
-    if(cookie.isEmpty) return;
+    if (cookie.isEmpty) return;
     douyinCookie = cookie;
     LocalStorageService.instance.setValue(LocalStorageService.kDouyinCookie, cookie);
     _updateDouyinAttr();
@@ -139,19 +139,31 @@ class PlatformService extends GetxService {
 
   // 本地存储-> update Core-Site attrs
   void setDouyuCookie(String cookie) {
-    if(cookie.isNotEmpty){
-      douyuCookie.value = cookie;
-      LocalStorageService.instance.setValue(LocalStorageService.kDouyuCookie, douyuCookie.value);
-    }
+    if (cookie.trim().isEmpty) return;
+    douyuCookie.value = cookie.trim();
+    LocalStorageService.instance.setValue(LocalStorageService.kDouyuCookie, douyuCookie.value);
+    _updateDouyuAttr();
+  }
+
+  /// Accept both June's cookie-only payload and this fork's extra refresh fields.
+  Future<void> importDouyuAccount(String cookie, {String? did, String? ltp0}) async {
+    if (cookie.trim().isEmpty) throw const FormatException('斗鱼 Cookie 为空');
+    douyuCookie.value = cookie.trim();
+    dy_did = did?.trim().isNotEmpty == true ? did!.trim() : '';
+    dyLtp0 = ltp0?.trim().isNotEmpty == true ? ltp0!.trim() : '';
+    await LocalStorageService.instance.setValue(LocalStorageService.kDouyuCookie, douyuCookie.value);
+    await LocalStorageService.instance.setValue(LocalStorageService.kDouyuDyDid, dy_did);
+    await LocalStorageService.instance.setValue(LocalStorageService.kDouyuLTP0, dyLtp0);
+    _updateDouyuAttr();
   }
 
   // for douyu cookie
   Future<void> setDouyuDidAndLtp0(String did, String ltp0) async {
-    if(did.isNotEmpty){
+    if (did.isNotEmpty) {
       dy_did = did;
       LocalStorageService.instance.setValue(LocalStorageService.kDouyuDyDid, dy_did);
     }
-    if(ltp0.isNotEmpty){
+    if (ltp0.isNotEmpty) {
       dyLtp0 = ltp0;
       LocalStorageService.instance.setValue(LocalStorageService.kDouyuLTP0, ltp0);
     }
@@ -159,11 +171,21 @@ class PlatformService extends GetxService {
     _updateDouyuAttr();
     _refreshDouyuCookie();
   }
+
   // 无论如何 都应检查cookie有效性后再保存
   // logic: 有效则不变，无效且配置did&ltp0并保存
   Future<void> _refreshDouyuCookie() async {
-    var cookie = await _douyuSite.refreshCookie(dy_did, dyLtp0);
-    setDouyuCookie(cookie);
+    final originalCookie = douyuCookie.value;
+    try {
+      final cookie = await _douyuSite.refreshCookie(dy_did, dyLtp0);
+      if (douyuCookie.value == originalCookie) {
+        setDouyuCookie(cookie);
+      } else {
+        _updateDouyuAttr();
+      }
+    } catch (e) {
+      Log.logPrint(e);
+    }
   }
 
   void douyuLogout() async {
@@ -180,13 +202,12 @@ class PlatformService extends GetxService {
     }
   }
 
-  void _updateDouyuAttr(){
-    Map<String,String> params = {
+  void _updateDouyuAttr() {
+    Map<String, String> params = {
       'cookie': douyuCookie.value,
     };
     _douyuSite.setSiteAttrs(params);
   }
-
 
   // ==================== 生命周期 ====================
 

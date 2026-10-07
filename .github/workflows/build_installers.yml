@@ -1,0 +1,167 @@
+name: Build Windows and Android installers
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'codex/**'
+      - main
+      - master
+    paths:
+      - '.github/workflows/build_installers.yml'
+      - 'simple_live_app/**'
+      - 'simple_live_core/**'
+      - 'assets/app_version.json'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: installers-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: simple_live_app/pubspec.yaml
+          cache: true
+      - name: Run application regression tests
+        working-directory: simple_live_app
+        run: |
+          flutter pub get
+          flutter test --no-pub test/playback_release_test.dart test/lan_account_sync_test.dart test/live_room_recovery_test.dart test/native_ios_controls_test.dart test/native_dock_gesture_test.dart test/liquid_glass_ui_test.dart test/follow_user_controller_test.dart test/tool_test.dart
+      - name: Run Douyu protocol tests
+        working-directory: simple_live_core
+        run: dart test test/douyu_playback_test.dart
+
+  windows:
+    needs: test
+    runs-on: windows-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: simple_live_app
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v7
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: simple_live_app/pubspec.yaml
+          cache: true
+      - name: Set up Rust
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup default stable
+      - name: Build Windows application
+        run: |
+          flutter pub get
+          flutter build windows --release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Package Windows installer and portable archive
+        id: package
+        run: |
+          $version = (Select-String -Path pubspec.yaml -Pattern '^version: (\S+)').Matches[0].Groups[1].Value.Split('+')[0]
+          $release = (Resolve-Path build/windows/x64/runner/Release).Path
+          if (-not (Test-Path "$release/slive.exe")) { throw 'Missing Windows executable' }
+          $output = New-Item -ItemType Directory -Force build/installers
+          Compress-Archive -Path "$release/*" -DestinationPath "$output/Slive-$version-Windows-x64-portable.zip"
+          $compiler = "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe"
+          if (-not (Test-Path $compiler)) {
+            choco install innosetup --yes --no-progress
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+          & $compiler "/DAppVersion=$version" "/DSourceDir=$release" "/DOutputDir=$($output.FullName)" windows/packaging/exe/installer.iss
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          "version=$version" >> $env:GITHUB_OUTPUT
+      - name: Upload Windows packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: Slive-${{ steps.package.outputs.version }}-Windows-x64
+          path: simple_live_app/build/installers/*
+          if-no-files-found: error
+          retention-days: 30
+      - name: Add download instructions
+        run: |
+          "## Windows packages`nDownload the Windows artifact from this run. Use the setup EXE to install, or extract the portable ZIP and run slive.exe.`n`nSource commit: $env:GITHUB_SHA" >> $env:GITHUB_STEP_SUMMARY
+
+  android:
+    needs: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    defaults:
+      run:
+        working-directory: simple_live_app
+        shell: bash
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version-file: simple_live_app/pubspec.yaml
+          cache: true
+      - name: Set up Rust for Android
+        run: |
+          rustup toolchain install stable --profile minimal --target armv7-linux-androideabi,aarch64-linux-android,x86_64-linux-android
+          rustup default stable
+      - name: Configure APK signing
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+        run: |
+          set -euo pipefail
+          if [[ -z "$ANDROID_KEYSTORE_BASE64" || -z "$ANDROID_KEYSTORE_PASSWORD" ]]; then
+            echo 'Configure ANDROID_KEYSTORE_BASE64 and ANDROID_KEYSTORE_PASSWORD repository secrets (see docs/build-installers.md).' >&2
+            exit 1
+          fi
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release-ci.keystore
+          printf 'storeFile=release-ci.keystore\nstorePassword=%s\nkeyPassword=%s\nkeyAlias=slive\n' "$ANDROID_KEYSTORE_PASSWORD" "$ANDROID_KEYSTORE_PASSWORD" > android/key.properties
+      - name: Build universal and per-ABI APKs
+        id: package
+        run: |
+          set -euo pipefail
+          flutter pub get
+          flutter build apk --release --split-per-abi
+          mkdir -p build/installers
+          version="$(sed -n 's/^version: \([^+ ]*\).*/\1/p' pubspec.yaml)"
+          for abi in armeabi-v7a arm64-v8a x86_64; do
+            cp "build/app/outputs/flutter-apk/app-$abi-release.apk" "build/installers/Slive-$version-Android-$abi.apk"
+          done
+          flutter build apk --release
+          cp build/app/outputs/flutter-apk/app-release.apk "build/installers/Slive-$version-Android-universal.apk"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+      - name: Verify signatures
+        run: |
+          set -euo pipefail
+          apksigner="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -1)"
+          for apk in build/installers/*.apk; do
+            "$apksigner" verify "$apk"
+          done
+      - name: Remove signing files
+        if: always()
+        run: rm -f android/key.properties android/app/release-ci.keystore
+      - name: Upload Android packages
+        uses: actions/upload-artifact@v7
+        with:
+          name: Slive-${{ steps.package.outputs.version }}-Android
+          path: simple_live_app/build/installers/*.apk
+          if-no-files-found: error
+          retention-days: 30
+      - name: Add download instructions
+        run: |
+          {
+            echo '## Android packages'
+            echo 'Download the Android artifact from this run. Most phones use arm64-v8a; use the universal APK if unsure.'
+            echo 'The APKs are release builds signed with the fixed repository signing key.'
+            echo "Source commit: $GITHUB_SHA"
+          } >> "$GITHUB_STEP_SUMMARY"

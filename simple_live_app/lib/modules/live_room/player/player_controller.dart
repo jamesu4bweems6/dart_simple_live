@@ -50,6 +50,18 @@ mixin PlayerMixin {
     } else if (Platform.isLinux) {
       await pp.setProperty('ao', 'alsa');
     }
+    if (Platform.isAndroid || Platform.isIOS) {
+      for (final option in {
+        'network-timeout': '30',
+        'stream-lavf-o': 'reconnect=1,reconnect_streamed=1,reconnect_on_network_error=1,reconnect_delay_max=10',
+      }.entries) {
+        try {
+          await pp.setProperty(option.key, option.value);
+        } catch (e) {
+          Log.logPrint(e);
+        }
+      }
+    }
     // media_kit 仓库更新导致的问题，临时解决办法
     if (Platform.isAndroid) {
       // 通过错误参数强制media_kit不seek, 解决了加载-pause-seek 在直播流上的开屏问题
@@ -331,7 +343,7 @@ mixin PlayerSystemMixin on PlayerMixin, PlayerStateMixin, PlayerDanmakuMixin {
   }
 
   /// 退出全屏
-  void exitFull() async {
+  Future<void> exitFull() async {
     // todo: 还应该关闭所有的dialog
     SmartDialog.dismiss();
     if (Platform.isAndroid || Platform.isIOS) {
@@ -740,6 +752,8 @@ class PlayerController extends BaseController
   StreamSubscription? _playingSubscription;
   StreamSubscription? _escSubscription;
 
+  bool get keepScreenAwake => true;
+
   void initStream() {
     _errorSubscription = player.stream.error.listen((event) {
       Log.d("播放器错误：$event");
@@ -754,7 +768,11 @@ class PlayerController extends BaseController
 
     _playingSubscription = player.stream.playing.listen((event) {
       if (event) {
-        WakelockPlus.enable();
+        if (keepScreenAwake) {
+          WakelockPlus.enable();
+        } else {
+          WakelockPlus.disable();
+        }
         Log.d("Playing");
       }
     });
