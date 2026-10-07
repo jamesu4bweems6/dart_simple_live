@@ -19,6 +19,6 @@
 - App 回归：`flutter test --no-pub test/playback_release_test.dart test/lan_account_sync_test.dart test/live_room_recovery_test.dart test/native_ios_controls_test.dart test/native_dock_gesture_test.dart test/liquid_glass_ui_test.dart test/follow_user_controller_test.dart test/tool_test.dart`
 - 斗鱼协议：在 `simple_live_core` 执行 `dart test test/douyu_playback_test.dart`，使用模拟 HTTP 响应验证设备身份、并发签名、Cookie 刷新、失效签名、房间状态及无效响应，无需真实账号。
 - 静态分析检查改动的 Dart 模块；仓库原有未使用字段和命名提示不属于本次新增问题。
-- GitHub Actions 已通过 [Windows/Android 原生编译、安装包打包和 APK 签名校验](https://github.com/jamesu4bweems6/dart_simple_live/actions/runs/37569152476)，生成 Windows 安装程序、便携包和四种 Android APK；[iOS 原生编译与 IPA 打包](https://github.com/jamesu4bweems6/dart_simple_live/actions/runs/37569152551)也已通过。构建代码提交为 `692e445c`，版本 `1.8.18+10818`。
+- GitHub Actions 已通过 [Windows/Android 原生编译、安装包打包和 APK 签名校验](https://github.com/jamesu4bweems6/dart_simple_live/actions/runs/37570691219)，生成包含 C++ 运行库的 Windows 安装程序、便携包和四种 Android APK；[iOS 原生编译与 IPA 打包](https://github.com/jamesu4bweems6/dart_simple_live/actions/runs/37569152551)也已通过。Windows/Android 构建代码提交为 `0070e75c`，版本 `1.8.18+10818`。
 - 真机息屏、来电、通知栏控制和长时间播放尚未验证；编译与单元测试不等同于真机播放验证。
 - 原有 `widget_test.dart` 是 Flutter 计数器模板，与应用实际入口不符，不作为本次回归用例。
