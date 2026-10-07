@@ -22,4 +22,4 @@
 
 其他 fork 可自行生成签名：`keytool -genkeypair -keystore release.keystore -storetype PKCS12 -alias slive -keyalg RSA -keysize 2048 -validity 10000`，设置密码后将签名文件的 Base64 和密码保存为上述 Secrets。构建结束会删除 runner 上的签名文件；缺少 Secrets 时明确报错，避免生成每次签名不同的 APK。
 
-Windows 安装程序由 Inno Setup 打包，包含完整 Flutter 运行库和资源，采用当前用户安装，不要求管理员权限。
+Windows 安装程序由 Inno Setup 打包，包含完整 Flutter 运行库、资源和 Visual C++ 运行库，采用当前用户安装，不要求管理员权限。便携包也随附 C++ 运行库，符合 [Flutter Windows 分发要求](https://docs.flutter.dev/platform-integration/windows/building#building-your-own-zip-file-for-windows)。

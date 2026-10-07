@@ -70,6 +70,17 @@ jobs:
           $version = (Select-String -Path pubspec.yaml -Pattern '^version: (\S+)').Matches[0].Groups[1].Value.Split('+')[0]
           $release = (Resolve-Path build/windows/x64/runner/Release).Path
           if (-not (Test-Path "$release/slive.exe")) { throw 'Missing Windows executable' }
+          $vswhere = "${env:ProgramFiles(x86)}/Microsoft Visual Studio/Installer/vswhere.exe"
+          $visualStudio = & $vswhere -latest -products '*' -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+          if (-not $visualStudio) { throw 'Visual Studio C++ toolchain not found' }
+          $runtime = Get-ChildItem "$visualStudio/VC/Redist/MSVC/*/x64/Microsoft.VC*.CRT" -Directory |
+            Sort-Object { [version]$_.Parent.Parent.Name } -Descending |
+            Select-Object -First 1
+          if (-not $runtime) { throw 'Visual C++ redistributable directory not found' }
+          Copy-Item "$($runtime.FullName)/*.dll" -Destination $release
+          foreach ($dll in 'msvcp140.dll', 'vcruntime140.dll', 'vcruntime140_1.dll') {
+            if (-not (Test-Path "$release/$dll")) { throw "Missing runtime: $dll" }
+          }
           $output = New-Item -ItemType Directory -Force build/installers
           Compress-Archive -Path "$release/*" -DestinationPath "$output/Slive-$version-Windows-x64-portable.zip"
           $compiler = "${env:ProgramFiles(x86)}/Inno Setup 6/ISCC.exe"
